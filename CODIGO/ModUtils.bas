@@ -682,7 +682,7 @@ Public Sub LogError(desc As String)
     nfile = FreeFile ' obtenemos un canal
     Open App.path & "\Logs\errores.log" For Append Shared As #nfile
     Print #nfile, Date & "-" & Time & ":" & desc
-    Debug.Print Date & "-" & Time & ":" & desc
+    frmDebug.add_text_tracebox Date & "-" & Time & ":" & desc
     Close #nfile
 
     Exit Sub
@@ -782,7 +782,7 @@ Sub General_Set_Connect()
     
     ParticleLluviaDorada = Graficos_Particulas.General_Particle_Create(208, -1, -1)
 
-    Call ao20audio.PlayMidi(6)
+    Call ao20audio.PlayMP3("31.mp3", True)
     
     mFadingMusicMod = 0
     CurMp3 = 1
