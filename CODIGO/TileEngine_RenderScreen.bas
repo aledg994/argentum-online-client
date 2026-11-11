@@ -24,8 +24,8 @@ Public map_letter_grh_next    As Long
 Public map_letter_a           As Single
 Public map_letter_fadestatus  As Byte
 Public gameplay_render_offset As Vector2
-Public Const hotkey_render_posX = 189
-Public Const hotkey_render_posY = 43
+Public Const hotkey_render_posX = 188
+Public Const hotkey_render_posY = 45
 Public Const hotkey_arrow_posx = 200 + 36 * 5 - 26
 Public Const hotkey_arrow_posy = 10
 Public Const GRH_HOTKEY_ARROW_HIDE = 19204
@@ -737,7 +737,7 @@ Private Sub DrawHotkey(ByVal HkIndex As Integer, ByVal PosX As Integer, ByVal Po
         If HotkeyList(HkIndex).Type = e_HotkeyType.Item Then
             Call Draw_GrhIndex(ObjData(HotkeyList(HkIndex).Index).GrhIndex, PosX, PosY)
         ElseIf HotkeyList(HkIndex).Type = e_HotkeyType.Spell Then
-            Call Draw_GrhIndex(HechizoData(HotkeyList(HkIndex).Index).IconoIndex, PosX, PosY)
+            Call Draw_GrhIndex(HechizoData(HotkeyList(HkIndex).Index).IconoIndex, PosX + 1, PosY + 1)
         End If
     End If
     If HkIndex = 9 Then
