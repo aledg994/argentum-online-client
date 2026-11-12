@@ -2029,7 +2029,7 @@ Public Sub DibujarVidaChar(ByVal charindex As Integer, ByVal PixelOffsetX As Int
             OffsetYname = 12
             OffsetYClan = 12
             Engine_Draw_Box PixelOffsetX + .Body.BodyOffset.x, PixelOffsetY + 38 + .Body.BodyOffset.y, 33, 4, RGBA_From_Comp(10, 10, 10)
-            Engine_Draw_Box PixelOffsetX + 1 + .Body.BodyOffset.y, PixelOffsetY + 38 + .Body.BodyOffset.y, .UserMinMAN / .UserMaxMAN * 31, 3, RGBA_From_Comp(0, 100, 255)
+            Engine_Draw_Box PixelOffsetX + 1 + .Body.BodyOffset.x, PixelOffsetY + 38 + .Body.BodyOffset.y, .UserMinMAN / .UserMaxMAN * 31, 3, RGBA_From_Comp(0, 100, 255)
         End If
     End With
 End Sub
