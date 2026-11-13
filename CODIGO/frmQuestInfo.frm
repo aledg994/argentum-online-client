@@ -17,10 +17,10 @@ Begin VB.Form FrmQuestInfo
    StartUpPosition =   1  'CenterOwner
    Begin RichTextLib.RichTextBox Text1 
       Height          =   2895
-      Left            =   3950
+      Left            =   3960
       TabIndex        =   10
       Top             =   2400
-      Width           =   3130
+      Width           =   3135
       _ExtentX        =   5530
       _ExtentY        =   5106
       _Version        =   393217

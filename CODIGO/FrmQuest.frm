@@ -1,21 +1,37 @@
 VERSION 5.00
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
 Begin VB.Form FrmQuests 
    Appearance      =   0  'Flat
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Quest"
-   ClientHeight    =   6555
+   ClientHeight    =   6495
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   12255
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   6555
+   ScaleHeight     =   6495
    ScaleWidth      =   12255
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin RichTextLib.RichTextBox txtInfoQuest 
+      Height          =   1575
+      Left            =   435
+      TabIndex        =   11
+      Top             =   3840
+      Width           =   3180
+      _ExtentX        =   5609
+      _ExtentY        =   2778
+      _Version        =   393217
+      BorderStyle     =   0
+      ReadOnly        =   -1  'True
+      ScrollBars      =   2
+      Appearance      =   0
+      TextRTF         =   $"FrmQuest.frx":0000
+   End
    Begin VB.TextBox detalle 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -84,7 +100,7 @@ Begin VB.Form FrmQuests
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   3150
+      Height          =   1200
       Left            =   560
       TabIndex        =   1
       Top             =   1800
@@ -153,7 +169,7 @@ Begin VB.Form FrmQuests
          Text            =   "Tipo"
          Object.Width           =   0
       EndProperty
-      Picture         =   "FrmQuest.frx":0000
+      Picture         =   "FrmQuest.frx":0082
    End
    Begin MSComctlLib.ListView ListView2 
       Height          =   2205
@@ -206,7 +222,7 @@ Begin VB.Form FrmQuests
          Text            =   "Tipo"
          Object.Width           =   0
       EndProperty
-      Picture         =   "FrmQuest.frx":CF0A
+      Picture         =   "FrmQuest.frx":CF8C
    End
    Begin VB.Label lblRepetible 
       Alignment       =   2  'Center
@@ -339,6 +355,7 @@ Private Sub Form_Load()
     Me.Picture = LoadInterface("ventanadetallemision.bmp")
     lblRepetible.Caption = JsonLanguage.Item("MENSAJE_MISION_REPETIBLE")
     ListView2.ColumnHeaders.Add , , "typeReward", 0
+    txtInfoQuest.BackColor = RGB(11, 11, 11)
     Call Aplicar_Transparencia(Me.hWnd, 240)
     Exit Sub
 Form_Load_Err:
