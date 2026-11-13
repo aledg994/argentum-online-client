@@ -102,6 +102,14 @@ Public Sub LoadBindedKeys()
     If Not FileExist(App.path & CustomKeyMappingFile, vbArchive) Then
         Call FileSystem.FileCopy(App.path & DefaultKeyMappingFile, App.path & CustomKeyMappingFile)
     End If
+    ' Si el Teclas.ini tiene menos binds que los esperados, lo recreamos desde DefaultKey.ini
+    Dim ExistingBinds As New clsIniManager
+    Call ExistingBinds.Initialize(App.path & CustomKeyMappingFile)
+    If val(ExistingBinds.GetValue("INIT", "NUMBINDS")) < (eMaxBinds - 1) Then
+        Kill App.path & CustomKeyMappingFile
+        Call FileSystem.FileCopy(App.path & DefaultKeyMappingFile, App.path & CustomKeyMappingFile)
+    End If
+    Set ExistingBinds = Nothing
     Dim DefaultBinds As New clsIniManager
     Call DefaultBinds.Initialize(App.path & DefaultKeyMappingFile)
     Dim UserBinds As New clsIniManager
