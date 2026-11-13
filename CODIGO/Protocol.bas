@@ -5108,6 +5108,9 @@ Private Sub HandleQuestDetails()
     Dim cantidadobjs As Integer
     Dim obindex As Integer
     Dim requirements As String
+    Dim TalkToNpc As Integer
+    Dim DeliverMap As Integer
+    Dim DeliverText As String
     FrmQuests.ListView2.ListItems.Clear
     FrmQuests.ListView1.ListItems.Clear
     FrmQuests.ListView1.ColumnHeaders(2).Width = 780 'Agrando el ancho de la columna para que entre la cantidad de npcs correctamente
@@ -5117,6 +5120,7 @@ Private Sub HandleQuestDetails()
     FrmQuests.picture1.Refresh
     FrmQuests.npclbl.Caption = ""
     FrmQuests.objetolbl.Caption = ""
+    FrmQuests.txtInfoQuest.Text = ""
     requirements = ""
     
     QuestIndex = Reader.ReadInt16
@@ -5238,10 +5242,23 @@ Private Sub HandleQuestDetails()
         subelemento.SubItems(4) = "typeSpell"
     Next i
     
-    If Len(requirements) > 0 Then
-        FrmQuests.detalle.Text = FrmQuests.detalle.Text & vbCrLf & vbCrLf & JsonLanguage.Item("MENSAJE_QUEST_REQUISITOS") & vbCrLf & requirements
+    TalkToNpc = reader.ReadInt16
+    DeliverMap = reader.ReadInt16
+    'Armamos el texto de entrega: mapa (si hay) y NPC (si tiene TalkTo)
+    If DeliverMap > 0 Then DeliverText = JsonLanguage.Item("MENSAJE_MAPA_ENTREGA") & DeliverMap
+    If TalkToNpc > 0 And TalkToNpc <= UBound(NpcData) Then
+        If LenB(DeliverText) > 0 Then DeliverText = DeliverText & vbCrLf
+        DeliverText = DeliverText & JsonLanguage.Item("MENSAJE_ENTREGAR_A") & NpcData(TalkToNpc).name
     End If
-    
+
+    'Entrega primero, requisitos después, con un solo AddtoRichTextBox
+    If LenB(DeliverText) > 0 And LenB(requirements) > 0 Then DeliverText = DeliverText & vbCrLf
+    requirements = DeliverText & requirements
+
+    If LenB(requirements) > 0 Then
+        Call AddtoRichTextBox(FrmQuests.txtInfoQuest, requirements, 128, 128, 128)
+    End If
+        
     FrmQuests.txtInfo.Text = tmpStr
     Call FrmQuests.ListView1_Click
     Call FrmQuests.ListView2_Click
