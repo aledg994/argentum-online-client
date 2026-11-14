@@ -1238,7 +1238,6 @@ Begin VB.Form frmMain
       Height          =   210
       Left            =   8520
       TabIndex        =   14
-      ToolTipText     =   "Numero de usuarios online"
       Top             =   120
       Visible         =   0   'False
       Width           =   645
