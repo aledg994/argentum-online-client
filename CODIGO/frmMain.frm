@@ -976,12 +976,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   9120
-      Left            =   120
+      Left            =   150
       ScaleHeight     =   608
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   736
       TabIndex        =   3
-      Top             =   2280
+      Top             =   2250
       Width           =   11040
    End
    Begin VB.Image btnZoomIn 
@@ -1213,11 +1213,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00E0E0E0&
       Height          =   495
-      Left            =   11400
+      Left            =   11640
       TabIndex        =   15
-      Top             =   7170
+      Top             =   7140
       Visible         =   0   'False
-      Width           =   3900
+      Width           =   3540
+      WordWrap        =   -1  'True
    End
    Begin VB.Label fps 
       Alignment       =   2  'Center
@@ -1239,6 +1240,7 @@ Begin VB.Form frmMain
       TabIndex        =   14
       ToolTipText     =   "Numero de usuarios online"
       Top             =   120
+      Visible         =   0   'False
       Width           =   645
    End
    Begin VB.Image EstadisticasBoton 
