@@ -41,9 +41,11 @@ Public LucesCuadradas     As clsLucesCuadradas
 Public Cheat_X            As Integer
 Public Cheat_Y            As Integer
 
-Private Const INDICE_COLOR_CLAN_NEUTRAL   As Byte = 48
-Private Const INDICE_COLOR_CLAN_CIUDADANO As Byte = 49
-Private Const INDICE_COLOR_CLAN_CRIMINAL  As Byte = 50
+Private Const INDICE_COLOR_CIUDADANO As Byte = 20
+Private Const INDICE_COLOR_ARMADA    As Byte = 21
+Private Const INDICE_COLOR_CRIMINAL  As Byte = 23
+Private Const INDICE_COLOR_CAOS      As Byte = 24
+Private Const COLOR_CLAN_NEUTRAL     As Byte = 255
 
 ''
 ' Maximum number of dialogs that can exist.
@@ -3876,11 +3878,17 @@ Private Function GetClanTagColor(ByVal ClanAlineacion As eClanType, ByRef colorO
     Dim indiceColor As Byte
     Select Case ClanAlineacion
         Case eClanType.ct_Neutral
-            indiceColor = INDICE_COLOR_CLAN_NEUTRAL
+            Call RGBAList(colorOut, COLOR_CLAN_NEUTRAL, COLOR_CLAN_NEUTRAL, COLOR_CLAN_NEUTRAL)
+            GetClanTagColor = True
+            Exit Function
         Case eClanType.ct_Ciudadana
-            indiceColor = INDICE_COLOR_CLAN_CIUDADANO
+            indiceColor = INDICE_COLOR_CIUDADANO
+        Case eClanType.ct_Real
+            indiceColor = INDICE_COLOR_ARMADA
         Case eClanType.ct_Criminal
-            indiceColor = INDICE_COLOR_CLAN_CRIMINAL
+            indiceColor = INDICE_COLOR_CRIMINAL
+        Case eClanType.ct_Caos
+            indiceColor = INDICE_COLOR_CAOS
         Case Else
             GetClanTagColor = False
             Exit Function
