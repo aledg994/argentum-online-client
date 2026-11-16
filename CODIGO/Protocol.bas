@@ -2338,11 +2338,7 @@ Private Sub HandleCharacterCreate()
         .Team = Reader.ReadInt8()
         .banderaIndex = Reader.ReadInt8()
         .NpcNumber = Reader.ReadInt16()
-        If reader.GetAvailable() > 0 Then
-            .clan_alineacion = reader.ReadInt8()
-        Else
-            .clan_alineacion = eClanType.ct_Neutral
-        End If
+        .clan_alineacion = reader.ReadInt8()
         .AnimAtaque1 = NpcData(.NpcNumber).LandAttackAnimation
         .BodyOnLand = NpcData(.NpcNumber).Body
         .BodyIdle = NpcData(.NpcNumber).BodyIdle
@@ -4816,6 +4812,8 @@ Private Sub HandleUpdateTagAndStatus()
     status = Reader.ReadInt8()
     NombreYClan = Reader.ReadString8()
     group_index = Reader.ReadInt16()
+    charlist(charindex).clan_index = reader.ReadInt16()
+    charlist(charindex).clan_alineacion = reader.ReadInt8()
     Dim Pos As Integer
     Pos = InStr(NombreYClan, "<")
     If Pos = 0 Then Pos = InStr(NombreYClan, "[")
