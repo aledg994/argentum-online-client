@@ -1292,6 +1292,9 @@ Private Sub Form_Load()
     AccionList3.AddItem (JsonLanguage.Item("COMBO_ACTION_KEY_2"))
     AccionList3.AddItem (JsonLanguage.Item("COMBO_ACTION_KEY_3"))
     Call CargaConfigEnForm
+    ' Evita que los presets se apliquen solos cuando el OptionButton recibe foco al abrir el form
+    Option1.TabStop = False
+    Option2.TabStop = False
     lblSalirDel(0).Caption = JsonLanguage.Item("MENSAJE_507") ' Seguro de grupo
     lblSalirDel(1).Caption = JsonLanguage.Item("MENSAJE_508") ' Robar
     lblSalirDel(2).Caption = JsonLanguage.Item("MENSAJE_509") ' Actualizar Posición
@@ -1362,7 +1365,10 @@ Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
     Next
     If bCambio Then
         Resultado = MsgBox(JsonLanguage.Item("MENSAJEBOX_CAMBIOS_CONFIGURACION"), vbQuestion + vbYesNoCancel, "Guardar cambios")
-        If Resultado = vbYes Then Call GuardaConfigEnVariables
+        If Resultado = vbYes Then
+            Call GuardaConfigEnVariables
+            Call SaveBindedKeys
+        End If
     End If
     If Resultado = vbCancel Then Cancel = 1
     Exit Sub
