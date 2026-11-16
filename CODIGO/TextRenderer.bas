@@ -1,6 +1,20 @@
 Attribute VB_Name = "TextRenderer"
 Option Explicit
 
+Private Const STATUS_CRIMINAL        As Byte = 0
+Private Const STATUS_CIUDADANO       As Byte = 1
+Private Const STATUS_CAOS            As Byte = 2
+Private Const STATUS_ARMADA          As Byte = 3
+Private Const STATUS_CONCILIO        As Byte = 4
+Private Const STATUS_CONSEJO         As Byte = 5
+Private Const INDICE_COLOR_CIUDADANO As Byte = 20
+Private Const INDICE_COLOR_ARMADA    As Byte = 21
+Private Const INDICE_COLOR_CONSEJO   As Byte = 22
+Private Const INDICE_COLOR_CRIMINAL  As Byte = 23
+Private Const INDICE_COLOR_CAOS      As Byte = 24
+Private Const INDICE_COLOR_CONCILIO  As Byte = 25
+Private Const COLOR_TEXTO_CHAT       As Byte = 255
+
 Public Function Engine_Text_Height(Texto As String, Optional multi As Boolean = False, Optional font As Byte = 1) As Integer
     On Error GoTo Engine_Text_Height_Err
     Dim A As Integer, B As Integer, d As Integer, e As Integer, f As Integer
@@ -55,6 +69,31 @@ Public Function Engine_Text_Height(Texto As String, Optional multi As Boolean = 
 Engine_Text_Height_Err:
     Call RegistrarError(Err.Number, Err.Description, "TextRenderer.Engine_Text_Height", Erl)
     Resume Next
+End Function
+
+Public Function GetStatusColorIndex(ByVal UserStatus As Byte, ByRef indiceColor As Byte) As Boolean
+    On Error GoTo GetStatusColorIndex_Err
+    Select Case UserStatus
+        Case STATUS_CRIMINAL
+            indiceColor = INDICE_COLOR_CRIMINAL
+        Case STATUS_CIUDADANO
+            indiceColor = INDICE_COLOR_CIUDADANO
+        Case STATUS_CAOS
+            indiceColor = INDICE_COLOR_CAOS
+        Case STATUS_ARMADA
+            indiceColor = INDICE_COLOR_ARMADA
+        Case STATUS_CONCILIO
+            indiceColor = INDICE_COLOR_CONCILIO
+        Case STATUS_CONSEJO
+            indiceColor = INDICE_COLOR_CONSEJO
+        Case Else
+            GetStatusColorIndex = False
+            Exit Function
+    End Select
+    GetStatusColorIndex = True
+    Exit Function
+GetStatusColorIndex_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TextRenderer.GetStatusColorIndex", Erl)
 End Function
 
 Public Sub RenderText(ByVal Texto As String, _
@@ -319,6 +358,7 @@ Public Sub Engine_Text_Render_No_Ladder(Texto As String, _
     Dim graf      As Grh
     Dim color1(3) As RGBA
     Dim color2(3) As RGBA
+    Dim indiceColor As Byte
     If charindex = 0 Then
         A = 255
     Else
@@ -328,24 +368,11 @@ Public Sub Engine_Text_Render_No_Ladder(Texto As String, _
         A = alpha
     End If
     Select Case status
-        Case 0 'criminal
-            Call RGBAList(color1, 225, 0, 0, A)
-            Call RGBAList(color2, 255, 255, 255, A)
-        Case 1 'ciuda
-            Call RGBAList(color1, 0, 128, 255, A)
-            Call RGBAList(color2, 255, 255, 255, A)
-        Case 2 'legión oscura
-            Call RGBAList(color1, 155, 0, 0, A)
-            Call RGBAList(color2, 255, 255, 255, A)
-        Case 3 'armada real
-            Call RGBAList(color1, 0, 175, 255, A)
-            Call RGBAList(color2, 255, 255, 255, A)
-        Case 4 'Legión
-            Call RGBAList(color1, 155, 0, 0, A)
-            Call RGBAList(color2, 255, 255, 255, A)
-        Case 5 'Consejo
-            Call RGBAList(color1, 22, 239, 253, A)
-            Call RGBAList(color2, 255, 255, 255, A)
+        Case STATUS_CRIMINAL To STATUS_CONSEJO
+            If GetStatusColorIndex(status, indiceColor) Then
+                Call RGBAList(color1, ColoresPJ(indiceColor).R, ColoresPJ(indiceColor).G, ColoresPJ(indiceColor).b, A)
+            End If
+            Call RGBAList(color2, COLOR_TEXTO_CHAT, COLOR_TEXTO_CHAT, COLOR_TEXTO_CHAT, A)
         Case 7 'aviso solicitud
             Call RGBAList(color2, 255, 255, 0, A)
         Case 8 'aviso desconectado
