@@ -1348,6 +1348,7 @@ Sub Char_Render(ByVal charindex As Long, ByVal PixelOffsetX As Integer, ByVal Pi
     Dim MostrarNombre    As Boolean
     Dim TempGrh          As Grh
     Dim terrainHeight    As Integer
+    Dim visibleNames     As Boolean
     With charlist(charindex)
         If .Heading = 0 Then Exit Sub
         ' --- ESTADO IDLE AL COMIENZO DEL FRAME ---
@@ -1775,9 +1776,9 @@ Sub Char_Render(ByVal charindex As Long, ByVal PixelOffsetX As Integer, ByVal Pi
                 Call Draw_Grh(.Body.Walk(.Heading), PixelOffsetX + .Body.BodyOffset.x, PixelOffsetY + .Body.BodyOffset.y, 1, 1, Color, False, x, y)
             End If
             'Draw name over head
-            Nombres = Not MapData(charlist(charindex).Pos.x, charlist(charindex).Pos.y).zone.OcultarNombre
+            visibleNames = Nombres And Not MapData(charlist(charindex).pos.x, charlist(charindex).pos.y).zone.OcultarNombre
           
-            If Nombres And Len(.nombre) > 0 And MostrarNombre Then
+            If visibleNames And Len(.nombre) > 0 And MostrarNombre Then
                 If .alias <> vbNullString Then
                     line = .alias
                 Else
@@ -1857,7 +1858,7 @@ Sub Char_Render(ByVal charindex As Long, ByVal PixelOffsetX As Integer, ByVal Pi
                                 OffsetYClan - Engine_Text_Height(line, True), NameColor, 1, False, 0, IIf(.Invisible, 160, 255)
                     End If
                 End If
-            ElseIf Nombres And .Team > 0 Then
+            ElseIf visibleNames And .Team > 0 Then
                 line = JsonLanguage.Item("MENSAJE_544") & .Team & ">"
                 Call RGBAList(NameColor, TeamColors(.Team).r, TeamColors(.Team).G, TeamColors(.Team).b, TeamColors(.Team).a)
                 Engine_Text_Render line, PixelOffsetX + 16 - CInt(Engine_Text_Width(line, True) / 2) + .Body.BodyOffset.x, PixelOffsetY + .Body.BodyOffset.y + 30 + OffsetYname - _
@@ -1871,7 +1872,7 @@ Sub Char_Render(ByVal charindex As Long, ByVal PixelOffsetX As Integer, ByVal Pi
                 End If
             Next i
         End If
-        If Nombres And Len(.nombre) > 0 And MostrarNombre And .tipoUsuario > 0 Then
+        If visibleNames And Len(.nombre) > 0 And MostrarNombre And .tipoUsuario > 0 Then
             Select Case .tipoUsuario
                 Case eTipoUsuario.aventurero
                     Call RGBAList(color, 0, 255, 0, IIf(.Invisible, 120, 255))
