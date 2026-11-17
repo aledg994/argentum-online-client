@@ -20,6 +20,7 @@ Public Const OPTION_MUSIC_ENABLED             As String = "Music"
 Public Const OPTION_SOUND_ENABLED             As String = "Sound"
 Public Const OPTION_FX_ENABLED                As String = "Fx"
 Public Const OPTION_FX_STEPS_ENABLED          As String = "Steps"
+Public Const OPTION_SND_DESC_NPCS_QUEST_ENABLED As String = "DescNpcsQuest"
 Public Const OPTION_AMBIENT_ENABLED           As String = "AmbientEnabled"
 Public Const OPTION_INVERTLR_CHANNELS_ENABLED As String = "InverLRChannels"
 Public X_OFFSET                               As Integer
@@ -45,6 +46,7 @@ Sub SaveConfig()
     Call SaveSetting("AUDIO", OPTION_AMBIENT_ENABLED, AmbientEnabled)
     Call SaveSetting("AUDIO", OPTION_INVERTLR_CHANNELS_ENABLED, InvertirSonido)
     Call SaveSetting("AUDIO", OPTION_FX_STEPS_ENABLED, FxStepsEnabled)
+    Call SaveSetting("AUDIO", OPTION_SND_DESC_NPCS_QUEST_ENABLED, SndDescNpcsQuestEnabled)
     Call SaveSetting("AUDIO", "VolMusic", VolMusic)
     Call SaveSetting("AUDIO", "Volfx", VolFX)
     Call SaveSetting("AUDIO", "VolSteps", VolSteps)
@@ -97,6 +99,7 @@ Sub LoadConfig()
     AudioEnabled = GetSettingAsByte("AUDIO", OPTION_SOUND_ENABLED, 1)
     FxEnabled = GetSettingAsByte("AUDIO", OPTION_FX_ENABLED, 1)
     FxStepsEnabled = GetSettingAsByte("AUDIO", OPTION_FX_STEPS_ENABLED, 1)
+    SndDescNpcsQuestEnabled = GetSettingAsByte("AUDIO", OPTION_SND_DESC_NPCS_QUEST_ENABLED, 1)
     AmbientEnabled = GetSettingAsByte("AUDIO", OPTION_AMBIENT_ENABLED, 1)
     InvertirSonido = GetSettingAsByte("AUDIO", OPTION_INVERTLR_CHANNELS_ENABLED, 1)
     'Musica y Sonido - Volumen

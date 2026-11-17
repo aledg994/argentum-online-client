@@ -785,5 +785,7 @@
   "MSG_ALIAS_PRESENT": "Você não pode transferir ou excluir um personagem que tenha alias. Por favor, remova o alias antes de realizar esta ação.",
   "MSG_ADD_TO_ALBUM_COLLECTION" : "Adicionar à coleção",
   "CAPTION_CARD_VIEWER" : "Visualizador de cartas",
-  "LBL_TOGGLE_AUTO_COMBAT": "Combate automático"
+  "LBL_TOGGLE_AUTO_COMBAT": "Combate automático",
+  "MENSAJE_MAPA_ENTREGA": "Mapa de entrega: ",
+  "MENSAJE_ENTREGAR_A": "Entregar a: "
 }

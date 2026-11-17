@@ -260,6 +260,12 @@ Begin VB.Form frmOpciones
          Top             =   600
          Width           =   3375
       End
+      Begin VB.Image chkSndDescNpcsQuest 
+         Height          =   255
+         Left            =   255
+         Top             =   3120
+         Width           =   255
+      End
       Begin VB.Image chkSteps 
          Height          =   255
          Left            =   255
@@ -607,6 +613,15 @@ Private Sub chkConfirmPetRelease_Click()
 chkConfirmPetRelease_Click_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmOpciones.chkConfirmPetRelease_Click", Erl)
     Resume Next
+End Sub
+Private Sub chkSndDescNpcsQuest_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+    On Error GoTo chkSndDescNpcsQuest_MouseUp_Err
+        Call ao20audio.PlayWav(SND_CLICK)
+        Call ToggleSoundDescNpcsQuest
+        Exit Sub
+chkSndDescNpcsQuest_MouseUp_Err:
+        Call RegistrarError(Err.Number, Err.Description, "frmOpciones.chkSndNpcsQuest_MouseUp", Erl)
+        Resume Next
 End Sub
 
 Private Sub chkSteps_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
@@ -1312,6 +1327,11 @@ Public Sub Init()
     Else
         chkSteps.Picture = LoadInterface("check-amarillo.bmp")
     End If
+    If ao20audio.SndDescNpcsQuestEnabled = 0 Then
+        chkSndDescNpcsQuest.Picture = Nothing
+    Else
+        chkSndDescNpcsQuest.Picture = LoadInterface("check-amarillo.bmp")
+    End If
     If FPSFLAG = 1 Then
         chkFps.Picture = LoadInterface("check-amarillo.bmp")
     Else
@@ -1690,3 +1710,21 @@ Public Function getMaxAvailablePhysicalMemoryInMb() As Long
     GlobalMemoryStatus ms
     getMaxAvailablePhysicalMemoryInMb = (ms.dwTotalPhys / (1024# * 1024#)) ' Convert bytes ? MB
 End Function
+Public Sub ToggleSoundDescNpcsQuest()
+    On Error GoTo toggleSoundDescNpcsQuest_Err
+    If ao20audio.SndDescNpcsQuestEnabled Then
+        ao20audio.SndDescNpcsQuestEnabled = False
+    Else
+        ao20audio.SndDescNpcsQuestEnabled = True
+    End If
+    If Not ao20audio.SndDescNpcsQuestEnabled Then
+        chkSndDescNpcsQuest.Picture = Nothing
+    Else
+        chkSndDescNpcsQuest.Picture = LoadInterface("check-amarillo.bmp")
+    End If
+    Exit Sub
+toggleSoundDescNpcsQuest_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmOpciones.ToggleSoundDescNpcsQuest", Erl)
+    Resume Next
+End Sub
+

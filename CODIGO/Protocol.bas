@@ -29,6 +29,20 @@ Option Explicit
 ''
 'When we have a list of strings, we use this to separate them and prevent
 'having too many string lengths in the queue. Yes, each string is NULL-terminated :P
+
+Private Const STATUS_CRIMINAL       As Byte = 0
+Private Const STATUS_CIUDADANO      As Byte = 1
+Private Const STATUS_CAOS           As Byte = 2
+Private Const STATUS_ARMADA         As Byte = 3
+Private Const STATUS_CONCILIO       As Byte = 4
+Private Const STATUS_CONSEJO        As Byte = 5
+Private Const INDICE_COLOR_CIUDADANO As Byte = 20
+Private Const INDICE_COLOR_ARMADA    As Byte = 21
+Private Const INDICE_COLOR_CONSEJO   As Byte = 22
+Private Const INDICE_COLOR_CRIMINAL  As Byte = 23
+Private Const INDICE_COLOR_CAOS      As Byte = 24
+Private Const INDICE_COLOR_CONCILIO  As Byte = 25
+
 Private Const SEPARATOR As String * 1 = vbNullChar
 Private LastPacket      As Byte
 Private IterationsHID   As Integer
@@ -2046,6 +2060,7 @@ Private Sub HandleGuildChat()
     Dim boldFlag    As Boolean, italicFlag As Boolean
     Dim prefix      As String
     Dim messageText As String
+    Dim indiceColor As Byte
     status = Reader.ReadInt8()
     finalChat = Reader.ReadString8()
     ' Check for localized message format: Msg####¬Nombre
@@ -2056,16 +2071,22 @@ Private Sub HandleGuildChat()
     ' If guild chat dialog is inactive, display in main chat window
     If Not DialogosClanes.Activo Then
         If InStr(1, finalChat, "~") > 0 Then
-            ' Color-formatted chat: split fields and apply custom RGB
-            colorRed = ReadField(2, finalChat, 126)
-            colorGreen = ReadField(3, finalChat, 126)
-            colorBlue = ReadField(4, finalChat, 126)
-            R = IIf(val(colorRed) > 255, 255, val(colorRed))
-            G = IIf(val(colorGreen) > 255, 255, val(colorGreen))
-            B = IIf(val(colorBlue) > 255, 255, val(colorBlue))
+            ' Color-formatted chat: color tomado del status del emisor, no del RGB del servidor
             boldFlag = (val(ReadField(5, finalChat, 126)) <> 0)
             italicFlag = (val(ReadField(6, finalChat, 126)) <> 0)
             messageText = Left$(finalChat, InStr(1, finalChat, "~") - 1)
+            If GetStatusColorIndex(status, indiceColor) Then
+                R = ColoresPJ(indiceColor).R
+                G = ColoresPJ(indiceColor).G
+                b = ColoresPJ(indiceColor).b
+            Else
+                colorRed = ReadField(2, finalChat, 126)
+                colorGreen = ReadField(3, finalChat, 126)
+                colorBlue = ReadField(4, finalChat, 126)
+                R = IIf(val(colorRed) > 255, 255, val(colorRed))
+                G = IIf(val(colorGreen) > 255, 255, val(colorGreen))
+                b = IIf(val(colorBlue) > 255, 255, val(colorBlue))
+            End If
             Call AddtoRichTextBox(frmMain.RecTxt, messageText, R, G, B, boldFlag, italicFlag)
         Else
             ' Use default font style for guild messages
@@ -2081,6 +2102,31 @@ Private Sub HandleGuildChat()
 errhandler:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleGuildChat", Erl)
 End Sub
+
+Private Function GetStatusColorIndex(ByVal UserStatus As Byte, ByRef indiceColor As Byte) As Boolean
+    On Error GoTo GetStatusColorIndex_Err
+    Select Case UserStatus
+        Case STATUS_CRIMINAL
+            indiceColor = INDICE_COLOR_CRIMINAL
+        Case STATUS_CIUDADANO
+            indiceColor = INDICE_COLOR_CIUDADANO
+        Case STATUS_CAOS
+            indiceColor = INDICE_COLOR_CAOS
+        Case STATUS_ARMADA
+            indiceColor = INDICE_COLOR_ARMADA
+        Case STATUS_CONCILIO
+            indiceColor = INDICE_COLOR_CONCILIO
+        Case STATUS_CONSEJO
+            indiceColor = INDICE_COLOR_CONSEJO
+        Case Else
+            GetStatusColorIndex = False
+            Exit Function
+    End Select
+    GetStatusColorIndex = True
+    Exit Function
+GetStatusColorIndex_Err:
+    Call RegistrarError(Err.Number, Err.Description, "Protocol.GetStatusColorIndex", Erl)
+End Function
 
 Private Sub HandleShowMessageBox()
     On Error GoTo errhandler
@@ -2294,11 +2340,7 @@ Private Sub HandleCharacterCreate()
         .Team = Reader.ReadInt8()
         .banderaIndex = Reader.ReadInt8()
         .NpcNumber = Reader.ReadInt16()
-        If reader.GetAvailable() > 0 Then
-            .clan_alineacion = reader.ReadInt8()
-        Else
-            .clan_alineacion = eClanType.ct_Neutral
-        End If
+        .clan_alineacion = reader.ReadInt8()
         .AnimAtaque1 = NpcData(.NpcNumber).LandAttackAnimation
         .BodyOnLand = NpcData(.NpcNumber).Body
         .BodyIdle = NpcData(.NpcNumber).BodyIdle
@@ -4772,6 +4814,8 @@ Private Sub HandleUpdateTagAndStatus()
     status = Reader.ReadInt8()
     NombreYClan = Reader.ReadString8()
     group_index = Reader.ReadInt16()
+    charlist(charindex).clan_index = reader.ReadInt16()
+    charlist(charindex).clan_alineacion = reader.ReadInt8()
     Dim Pos As Integer
     Pos = InStr(NombreYClan, "<")
     If Pos = 0 Then Pos = InStr(NombreYClan, "[")
@@ -5110,6 +5154,9 @@ Private Sub HandleQuestDetails()
     Dim cantidadobjs As Integer
     Dim obindex As Integer
     Dim requirements As String
+    Dim TalkToNpc As Integer
+    Dim DeliverMap As Integer
+    Dim DeliverText As String
     FrmQuests.ListView2.ListItems.Clear
     FrmQuests.ListView1.ListItems.Clear
     FrmQuests.ListView1.ColumnHeaders(2).Width = 780 'Agrando el ancho de la columna para que entre la cantidad de npcs correctamente
@@ -5119,6 +5166,7 @@ Private Sub HandleQuestDetails()
     FrmQuests.picture1.Refresh
     FrmQuests.npclbl.Caption = ""
     FrmQuests.objetolbl.Caption = ""
+    FrmQuests.txtInfoQuest.Text = ""
     requirements = ""
     
     QuestIndex = Reader.ReadInt16
@@ -5240,10 +5288,23 @@ Private Sub HandleQuestDetails()
         subelemento.SubItems(4) = "typeSpell"
     Next i
     
-    If Len(requirements) > 0 Then
-        FrmQuests.detalle.Text = FrmQuests.detalle.Text & vbCrLf & vbCrLf & JsonLanguage.Item("MENSAJE_QUEST_REQUISITOS") & vbCrLf & requirements
+    TalkToNpc = reader.ReadInt16
+    DeliverMap = reader.ReadInt16
+    'Armamos el texto de entrega: mapa (si hay) y NPC (si tiene TalkTo)
+    If DeliverMap > 0 Then DeliverText = JsonLanguage.Item("MENSAJE_MAPA_ENTREGA") & DeliverMap
+    If TalkToNpc > 0 And TalkToNpc <= UBound(NpcData) Then
+        If LenB(DeliverText) > 0 Then DeliverText = DeliverText & vbCrLf
+        DeliverText = DeliverText & JsonLanguage.Item("MENSAJE_ENTREGAR_A") & NpcData(TalkToNpc).name
     End If
-    
+
+    'Entrega primero, requisitos después, con un solo AddtoRichTextBox
+    If LenB(DeliverText) > 0 And LenB(requirements) > 0 Then DeliverText = DeliverText & vbCrLf
+    requirements = DeliverText & requirements
+
+    If LenB(requirements) > 0 Then
+        Call AddtoRichTextBox(FrmQuests.txtInfoQuest, requirements, 128, 128, 128)
+    End If
+        
     FrmQuests.txtInfo.Text = tmpStr
     Call FrmQuests.ListView1_Click
     Call FrmQuests.ListView2_Click

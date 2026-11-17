@@ -2086,6 +2086,8 @@ End Function
 '------------------------------------------------------------------------------
 Public Sub PlayQuestDescAudio(ByVal questIndex As Integer)
     Dim audioFile As String
+    
+    If SndDescNpcsQuestEnabled = False Then Exit Sub
 
     If questIndex < LBound(QuestList) Or questIndex > UBound(QuestList) Then Exit Sub
 
@@ -2119,6 +2121,8 @@ End Sub
 '------------------------------------------------------------------------------
 Public Sub PlayQuestFinalDescAudio(ByVal questIndex As Integer)
     Dim audioFile As String
+    
+    If SndDescNpcsQuestEnabled = False Then Exit Sub
 
     If questIndex < LBound(QuestList) Or questIndex > UBound(QuestList) Then Exit Sub
 

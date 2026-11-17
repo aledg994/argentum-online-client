@@ -95,42 +95,84 @@ Const DefaultKeyMappingFile As String = "\..\Recursos\OUTPUT\DefaultKey.ini"
 
 Public Sub LoadBindedKeys()
     On Error GoTo LoadBindedKeys_Err
-    If Not FileExist(App.path & DefaultKeyMappingFile, vbArchive) Then
-        MsgBox JsonLanguage.Item("MENSAJE_ARCHIVO_REQUERIDO") & App.path & DefaultKeyMappingFile, vbCritical + vbOKOnly, JsonLanguage.Item("TITULO_ERROR")
+
+    Dim defaultFile       As String
+    Dim customFile        As String
+    Dim filePaths         As Variant
+    Dim filePath          As Variant
+    Dim fileNumber        As Integer
+    Dim fileContent       As String
+    Dim normalizedContent As String
+    Dim defaultBinds      As clsIniManager
+    Dim userBinds         As clsIniManager
+    Dim bindIndex         As Long
+    Dim bindValue         As String
+
+    defaultFile = App.path & DefaultKeyMappingFile
+    customFile = App.path & CustomKeyMappingFile
+
+    If Not FileExist(defaultFile, vbArchive) Then
+        MsgBox JsonLanguage.Item("MENSAJE_ARCHIVO_REQUERIDO") & defaultFile, vbCritical + vbOKOnly, JsonLanguage.Item("TITULO_ERROR")
         End
     End If
+
     ' Si no existe el Teclas.ini lo creamos como copia del DefaultKey.ini
-    If Not FileExist(App.path & CustomKeyMappingFile, vbArchive) Then
-        Call FileSystem.FileCopy(App.path & DefaultKeyMappingFile, App.path & CustomKeyMappingFile)
+    If Not FileExist(customFile, vbArchive) Then
+        Call FileSystem.FileCopy(defaultFile, customFile)
     End If
-    ' Si el Teclas.ini tiene menos binds que los esperados, lo recreamos desde DefaultKey.ini
-    Dim ExistingBinds As New clsIniManager
-    Call ExistingBinds.Initialize(App.path & CustomKeyMappingFile)
-    If val(ExistingBinds.GetValue("INIT", "NUMBINDS")) < (eMaxBinds - 1) Then
-        Kill App.path & CustomKeyMappingFile
-        Call FileSystem.FileCopy(App.path & DefaultKeyMappingFile, App.path & CustomKeyMappingFile)
-    End If
-    Set ExistingBinds = Nothing
-    Dim DefaultBinds As New clsIniManager
-    Call DefaultBinds.Initialize(App.path & DefaultKeyMappingFile)
-    Dim UserBinds As New clsIniManager
-    Call UserBinds.Initialize(App.path & CustomKeyMappingFile)
+
+    ' Normalizar ambos archivos a CRLF, escribiendo solo si hubo cambios
+    filePaths = Array(defaultFile, customFile)
+
+    For Each filePath In filePaths
+        fileNumber = FreeFile()
+        Open CStr(filePath) For Binary Access Read As #fileNumber
+        fileContent = Space$(LOF(fileNumber))
+        If LOF(fileNumber) > 0 Then Get #fileNumber, , fileContent
+        Close #fileNumber
+        fileNumber = 0
+
+        normalizedContent = Replace$(fileContent, vbCrLf, vbLf)
+        normalizedContent = Replace$(normalizedContent, vbCr, vbLf)
+        normalizedContent = Replace$(normalizedContent, vbLf, vbCrLf)
+
+        If normalizedContent <> fileContent Then
+            fileNumber = FreeFile()
+            Open CStr(filePath) For Binary Access Write As #fileNumber
+            Put #fileNumber, , normalizedContent
+            Close #fileNumber
+            fileNumber = 0
+        End If
+    Next filePath
+
+    ' Cargar configuraciones
+    Set defaultBinds = New clsIniManager
+    Call defaultBinds.Initialize(defaultFile)
+
+    Set userBinds = New clsIniManager
+    Call userBinds.Initialize(customFile)
+
     NUMBINDS = eMaxBinds - 1
+
     ACCION1 = GetAction(DefaultBinds, UserBinds, 1)
     ACCION2 = GetAction(DefaultBinds, UserBinds, 2)
     ACCION3 = GetAction(DefaultBinds, UserBinds, 3)
+
     ReDim Preserve BindKeys(1 To NUMBINDS) As tBindedKey
-    Dim Index As Integer
-    Dim Bind  As String
-    For Index = 1 To NUMBINDS
-        Bind = GetBind(DefaultBinds, UserBinds, CStr(Index))
-        BindKeys(Index).KeyCode = val(General_Field_Read(1, Bind, ","))
-        BindKeys(Index).Name = General_Field_Read(2, Bind, ",")
-    Next Index
+
+    For bindIndex = 1 To NUMBINDS
+        bindValue = GetBind(defaultBinds, userBinds, CStr(bindIndex))
+        BindKeys(bindIndex).keyCode = val(General_Field_Read(1, bindValue, ","))
+        BindKeys(bindIndex).name = General_Field_Read(2, bindValue, ",")
+    Next bindIndex
+
     Set DefaultBinds = Nothing
     Set UserBinds = Nothing
+
     Exit Sub
+
 LoadBindedKeys_Err:
+    If fileNumber <> 0 Then Close #fileNumber
     Call RegistrarError(Err.Number, Err.Description, "ModUtils.LoadBindedKeys", Erl)
     Resume Next
 End Sub
@@ -158,7 +200,7 @@ End Function
 Public Sub SaveBindedKeys()
     On Error GoTo SaveBindedKeys_Err
     Dim lC As Integer, Arch As String
-    Arch = App.path & "\..\Recursos\OUTPUT\" & "Teclas.ini"
+    Arch = App.path & CustomKeyMappingFile
     Call General_Var_Write(Arch, "INIT", "NUMBINDS", Int(NUMBINDS))
     Call General_Var_Write(Arch, "INIT", "ACCION1", MouseActionToString(ACCION1))
     Call General_Var_Write(Arch, "INIT", "ACCION2", MouseActionToString(ACCION2))

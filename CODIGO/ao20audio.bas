@@ -40,6 +40,7 @@ Public FxEnabled               As Byte
 Public AudioEnabled            As Byte
 Public AmbientEnabled          As Byte
 Public FxStepsEnabled          As Byte
+Public SndDescNpcsQuestEnabled     As Byte
 Private CurMusicVolume         As Long
 Private CurAmbientVolume       As Long
 Private CurFxVolume            As Long
