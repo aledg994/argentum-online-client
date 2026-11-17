@@ -88,6 +88,14 @@ Dim HALF_BORDER_X         As Integer
 Dim HALF_BORDER_Y         As Integer
 Dim HEIGHT_MAIN_INVENTORY As Integer
 
+Private Type POINTAPI
+    x As Long
+    y As Long
+End Type
+
+Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
+
 #If ConMenuesConextuales = 1 Then   'Argument list varies!!!
     Public Sub Initialize(ByRef DirectDraw As DirectDraw7, _
                           ByRef InvPic As PictureBox, _
@@ -657,6 +665,17 @@ Private Sub InventoryWindow_MouseUp(Button As Integer, Shift As Integer, x As Si
         ' Disparo un evento para que la lógica del drag&drop sea independiente al inventario
         If Slot > 0 Then
             RaiseEvent ItemDropped(Dragging, Slot, x, y)
+        ElseIf Me Is frmMain.Inventario Then
+            ' Soltado sobre el render: equivale a apretar la tecla de tirar
+            If IsCursorOverRenderer() And Not IsDialogOpen() And Not IsMovementBlocked() _
+               And Not IsDragDropBlockedByPanel() Then
+                InvSelectedItem = Dragging
+                Dragging = 0
+                InvNeedsRedraw = True
+                Call frmMain.OnDragEnd
+                Call TirarItem
+                Exit Sub
+            End If
         End If
         ' Dejo de dibujar el item arrastrado
         Dragging = 0
@@ -684,6 +703,16 @@ InventoryWindow_MouseUp_Err:
     Call RegistrarError(Err.Number, Err.Description, "clsGrapchicalInventory.InventoryWindow_MouseUp", Erl)
     Resume Next
 End Sub
+
+Private Function IsCursorOverRenderer() As Boolean
+    On Error GoTo IsCursorOverRenderer_Err
+    Dim cursorPoint As POINTAPI
+    Call GetCursorPos(cursorPoint)
+    IsCursorOverRenderer = (WindowFromPoint(cursorPoint.x, cursorPoint.y) = frmMain.renderer.hWnd)
+    Exit Function
+IsCursorOverRenderer_Err:
+    Call RegistrarError(Err.Number, Err.Description, "clsGrapchicalInventory.IsCursorOverRenderer", Erl)
+End Function
 
 Public Function GetInfo(ByVal Item As Integer) As String
     On Error GoTo GetInfo_Err

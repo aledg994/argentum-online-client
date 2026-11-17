@@ -29,6 +29,8 @@ Attribute VB_Name = "ModGameplayUI"
 Global G_LastSelectedSlot As Integer
 Global G_LasSelectedObjIndex As Integer
 
+Private Const DRAG_DROP_BLOCKING_FORMS As String = "|frmHerrero|frmCarp|FrmSastre|frmAlqui|frmCantidad|frmEntrenador|FrmViajes|frmShopAO20|frmShopPjsAO20|frmRetos|frmSkins|FrmKeyInv|frmCollectibleCard|"
+
 Public Sub SetupGameplayUI()
     frmMain.shapexy.Left = 1200
     frmMain.shapexy.Top = 1200
@@ -535,6 +537,22 @@ End Sub
 
 Public Function IsDialogOpen() As Boolean
     IsDialogOpen = pausa Or frmComerciar.visible Or frmComerciarUsu.visible Or frmBancoObj.visible Or frmGoliath.visible Or IsGameDialogOpen
+End Function
+
+Public Function IsDragDropBlockedByPanel() As Boolean
+    On Error GoTo IsDragDropBlockedByPanel_Err
+    Dim loadedForm As Form
+    For Each loadedForm In Forms
+        If loadedForm.visible Then
+            If InStr(1, DRAG_DROP_BLOCKING_FORMS, "|" & loadedForm.name & "|", vbTextCompare) > 0 Then
+                IsDragDropBlockedByPanel = True
+                Exit Function
+            End If
+        End If
+    Next loadedForm
+    Exit Function
+IsDragDropBlockedByPanel_Err:
+    Call RegistrarError(Err.Number, Err.Description, "ModGameplayUI.IsDragDropBlockedByPanel", Erl)
 End Function
 
 Public Function IsInputFocus() As Boolean
