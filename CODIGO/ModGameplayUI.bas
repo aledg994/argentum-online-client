@@ -359,8 +359,8 @@ Public Sub HandleChatMsg(ByVal InputText As String)
             If Right$(InputText, Len(InputText) - 1) <> "" Then Call ParseUserCommand("-" & Right$(InputText, Len(InputText) - 1))
             SendingType = 2
             'Global
-        ElseIf Left$(InputText, 1) = ";" Then
-            If Right$(InputText, Len(InputText) - 1) <> "" Then Call ParseUserCommand("/CONSOLA " & Right$(InputText, Len(InputText) - 1))
+        ElseIf Left$(InputText, 1) = "/GLOBAL" Then
+            If Right$(InputText, Len(InputText) - 1) <> "" Then Call ParseUserCommand("/GLOBAL " & Right$(InputText, Len(InputText) - 1))
             sndPrivateTo = ""
         ElseIf Left$(InputText, 1) = "/RMSG" Then
             If Right$(InputText, Len(InputText) - 1) <> "" Then Call ParseUserCommand("/RMSG " & Right$(InputText, Len(InputText) - 1))

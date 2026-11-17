@@ -426,7 +426,7 @@ Public Enum ClientPacketID
     eIgnored                 '/IGNORADO
     eCheckSlot               '/SLOT
     eSetSpeed                '/SPEED
-    eGlobalMessage           '/CONSOLA
+    eGlobalMessage           '/GLOBAL
     eGlobalOnOff
     eUseKey
     eDonateGold              '/DONAR
