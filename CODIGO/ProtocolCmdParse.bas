@@ -1412,7 +1412,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                 End If
             Case "/IGNORADO", "/IGNORED"
                 Call WriteIgnored
-            Case "/CONSOLA"
+            Case "/GLOBAL"
                 'Ojo, no usar notNullArguments porque se usa el string Vacío para borrar cartel.
                 If UserStats.estado = 1 Then 'Muerto
                     With FontTypes(FontTypeNames.FONTTYPE_INFO)
@@ -1433,7 +1433,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                         End If
                     End If
                 End If
-            Case "/GLOBAL"
+            Case "/TOGGLEGLOBAL"
                 If EsGM Then
                     Call WriteGlobalOnOff
                 End If

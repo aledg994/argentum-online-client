@@ -3439,7 +3439,7 @@ Public Sub CompletarEnvioMensajes()
         Case 6
             SendTxt.text = "/GRMG "
         Case 7
-            SendTxt.text = ";"
+            SendTxt.Text = "/GLOBAL "
         Case 8
             SendTxt.text = "/RMSG "
         Case 9
