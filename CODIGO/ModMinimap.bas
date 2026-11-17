@@ -149,24 +149,28 @@ End Sub
 
 Public Sub DibujarMiniMapa()
     On Error GoTo DibujarMiniMapa_Err
+    Dim i     As Long
+    Dim PosX  As Long
+    Dim PosY  As Long
+    Dim Color As Long
+
     If CenteredMinimap = 0 Then
         ' Old system: load individual 100x100 map images
         frmMain.MiniMap.Picture = LoadMinimap(ResourceMap)
     End If
+
+    If CenteredMinimap <> 0 Then Exit Sub
+    If ResourceMap < LBound(ListNPCMapData) Or ResourceMap > UBound(ListNPCMapData) Then Exit Sub
+    If ListNPCMapData(ResourceMap).NpcCount < 1 Then Exit Sub
+
     ' Paint NPCs on minimap
-    If ListNPCMapData(ResourceMap).NpcCount > 0 And CenteredMinimap = 0 Then
-        Dim i As Long
-        For i = 1 To MAX_QUESTNPCS_VISIBLE
-            Dim PosX As Long
-            Dim PosY As Long
+    For i = 1 To MAX_QUESTNPCS_VISIBLE
+        If ListNPCMapData(ResourceMap).NpcList(i).NPCNumber > 0 Then
             PosX = ListNPCMapData(ResourceMap).NpcList(i).Position.x
             PosY = ListNPCMapData(ResourceMap).NpcList(i).Position.y
-            Dim Color As Long
             Select Case ListNPCMapData(ResourceMap).NpcList(i).state
                 Case 1
                     Color = RGB(0, 198, 254)
-                Case 2
-                    Color = RGB(255, 201, 14)
                 Case Else
                     Color = RGB(255, 201, 14)
             End Select
@@ -182,9 +186,9 @@ Public Sub DibujarMiniMapa()
             Call SetPixel(frmMain.MiniMap.hdc, PosX, PosY + 2, &H808080)
             Call SetPixel(frmMain.MiniMap.hdc, PosX - 1, PosY + 1, &H808080)
             Call SetPixel(frmMain.MiniMap.hdc, PosX - 1, PosY, &H808080)
-        Next i
-        frmMain.MiniMap.Refresh
-    End If
+        End If
+    Next i
+    frmMain.MiniMap.Refresh
     Exit Sub
 DibujarMiniMapa_Err:
     Call RegistrarError(Err.Number, Err.Description, "ModMinimap.DibujarMiniMapa", Erl)

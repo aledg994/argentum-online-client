@@ -270,6 +270,8 @@ End Type
 
 Private MoldesBodies()        As tMoldeCuerpo
 Private BodiesHeading(1 To 4) As E_Heading
+Public Const MAP_NPC_DATA_INITIAL_SIZE As Long = 1
+Public Const MAPS_WORLD_DATA_FILE As String = "mapsworlddata.dat"
 
 Public Sub CargarRecursos()
     On Error GoTo CargarRecursos_Err
@@ -1508,32 +1510,54 @@ End Sub
 
 Public Sub Cargarmapsworlddata()
     On Error GoTo Cargarmapsworlddata_Err
-    Dim MapFile As String
-    Dim i       As Integer
-    Dim J       As Byte
+    Dim MapFile     As String
+    Dim i           As Integer
+    Dim j           As Byte
+    Dim worldSize   As Long
+    Dim Leer        As clsIniManager
+
     #If Compresion = 1 Then
-        If Not Extract_File(Scripts, App.path & "\..\Recursos\OUTPUT\", "mapsworlddata.dat", Windows_Temp_Dir, ResourcesPassword, False) Then
+        If Not Extract_File(Scripts, App.path & "\..\Recursos\OUTPUT\", MAPS_WORLD_DATA_FILE, Windows_Temp_Dir, ResourcesPassword, False) Then
             Err.Description = "¡No se puede cargar el archivo de mapsworlddata.dat!"
             MsgBox Err.Description
         End If
-        MapFile = Windows_Temp_Dir & "mapsworlddata.dat"
+        MapFile = Windows_Temp_Dir & MAPS_WORLD_DATA_FILE
     #Else
-        MapFile = App.path & "\..\Recursos\init\mapsworlddata.dat"
+        MapFile = App.path & "\..\Recursos\init\" & MAPS_WORLD_DATA_FILE
+        If LenB(dir$(MapFile)) = 0 Then
+            Call RegistrarError(53, "No existe el archivo: " & MapFile, "Recursos.Cargarmapsworlddata", 0)
+            Exit Sub
+        End If
     #End If
-    Dim Leer As New clsIniManager
+
+    Set Leer = New clsIniManager
     Call Leer.Initialize(MapFile)
     TotalWorlds = val(Leer.GetValue("INIT", "TotalWorlds"))
+
+    If TotalWorlds < 1 Then
+        Call RegistrarError(9, "mapsworlddata.dat: [INIT] TotalWorlds invalido (" & TotalWorlds & ")", "Recursos.Cargarmapsworlddata", 0)
+        Exit Sub
+    End If
+
     ReDim Mundo(1 To TotalWorlds) As WorldMap
+
     For J = 1 To TotalWorlds
         Mundo(J).Alto = val(Leer.GetValue("WORLDMAP" & J, "Alto"))
         Mundo(J).Ancho = val(Leer.GetValue("WORLDMAP" & J, "Ancho"))
-        ReDim Mundo(J).MapIndice(1 To Mundo(J).Alto * Mundo(J).Ancho) As Integer
-        For i = 1 To Mundo(J).Alto * Mundo(J).Ancho
-            Mundo(J).MapIndice(i) = val(Leer.GetValue("WORLDMAP" & J, i))
-        Next i
+        worldSize = CLng(Mundo(j).Alto) * CLng(Mundo(j).Ancho)
+
+        If worldSize > 0 Then
+            ReDim Mundo(j).MapIndice(1 To worldSize) As Integer
+            For i = 1 To worldSize
+                Mundo(j).MapIndice(i) = val(Leer.GetValue("WORLDMAP" & j, i))
+            Next i
+        Else
+            Call RegistrarError(9, "mapsworlddata.dat: WORLDMAP" & j & " con Alto/Ancho invalido", "Recursos.Cargarmapsworlddata", 0)
+        End If
     Next J
+
     #If Compresion = 1 Then
-        Delete_File Windows_Temp_Dir & "mapsworlddata.dat"
+        Call Delete_File(Windows_Temp_Dir & MAPS_WORLD_DATA_FILE)
     #End If
     Exit Sub
 Cargarmapsworlddata_Err:
@@ -2451,24 +2475,37 @@ Function LoadFont(Name As String) As Boolean
 End Function
 
 Public Sub CargarNPCsMapData()
+    On Error GoTo CargarNPCsMapData_Err
     Dim fh      As Integer
-    Dim NumMaps As Integer
+    Dim binPath As String
+    Dim x       As Single
+    Dim y       As Single
+    Dim map     As Integer
+    Dim i       As Long
+    Dim TempInt As Integer
+
+    fh = 0
+    binPath = App.path & "\..\Recursos\OUTPUT\QuestNPCsMapData.bin"
+
+    If LenB(dir$(binPath)) = 0 Then
+        Call RegistrarError(53, "No existe el archivo: " & binPath, "Recursos.CargarNPCsMapData", 0)
+        Exit Sub
+    End If
+
+    ReDim ListNPCMapData(1 To MAP_NPC_DATA_INITIAL_SIZE) As t_MapNpc
+
     fh = FreeFile
-    NumMaps = val(GetVar(App.path & "\..\Recursos\Dat\zonas.dat", "Mapas", "Cantidad"))
-    Open App.path & "\..\Recursos\OUTPUT\QuestNPCsMapData.bin" For Binary As fh
-    ReDim ListNPCMapData(1 To NumMaps) As t_MapNpc
-    Dim x As Single
-    Dim y As Single
+    Open binPath For Binary As fh
+
     Do While Not EOF(fh)
-        Dim map As Integer
         Get fh, , map
         If map > 0 Then
+            If map > UBound(ListNPCMapData) Then
+                ReDim Preserve ListNPCMapData(1 To map) As t_MapNpc
+            End If
             ReDim ListNPCMapData(map).NpcList(1 To MAX_QUESTNPCS_VISIBLE) As t_QuestNPCMapData
-            Dim i As Long
             For i = 1 To MAX_QUESTNPCS_VISIBLE
-                Dim TempInt As Integer
                 Get #fh, , TempInt
-                'Debug.Assert map > 0
                 ListNPCMapData(map).NpcList(i).NPCNumber = TempInt
                 If TempInt > 0 Then
                     ListNPCMapData(map).NpcCount = ListNPCMapData(map).NpcCount + 1
@@ -2486,7 +2523,12 @@ Public Sub CargarNPCsMapData()
         End If
         DoEvents
     Loop
+
     Close fh
+    Exit Sub
+CargarNPCsMapData_Err:
+    If fh > 0 Then Close fh
+    Call RegistrarError(Err.Number, Err.Description, "Recursos.CargarNPCsMapData", Erl)
 End Sub
 
 ' Módulo: modMultilenguaje.bas
