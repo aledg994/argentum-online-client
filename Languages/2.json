@@ -785,6 +785,7 @@
     "MSG_ALIAS_PRESENT": "You cannot transfer or delete a character that has an alias. Please remove the alias before performing this action.",
     "MSG_ADD_TO_ALBUM_COLLECTION" : "Add to collection",
     "CAPTION_CARD_VIEWER" : "Card Viewer",
+	"LBL_TOGGLE_AUTO_COMBAT": "Auto combat",
 	"MENSAJE_MAPA_ENTREGA": "Delivery map: ",
 	"MENSAJE_ENTREGAR_A": "Deliver to: "
 }

@@ -78,6 +78,7 @@ Public Enum e_KeyAction
     eGroupList = 38
     eToggleSound = 39
     eToggleMusic = 40
+    eToggleAutoCombat = 41
     [eMaxBinds]
 End Enum
 
@@ -392,6 +393,14 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
             Call frmOpciones.ToggleSoundEffects
         Case BindKeys(eToggleMusic).KeyCode
             Call frmOpciones.ToggleMusic
+        Case BindKeys(e_KeyAction.eToggleAutoCombat).keyCode
+            If UserStats.estado = 1 Then
+                With FontTypes(FontTypeNames.FONTTYPE_INFO)
+                    Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
+                End With
+                Exit Function
+            End If
+            Call WriteToggleAutoCombat
         Case Else
             Accionar = False
             Exit Function

@@ -785,6 +785,7 @@
   "MSG_ALIAS_PRESENT": "Non puoi trasferire o eliminare un personaggio che ha un alias. Per favore, elimina l'alias prima di eseguire questa azione.",
   "MSG_ADD_TO_ALBUM_COLLECTION" : "Aggiungi alla collezione",
   "CAPTION_CARD_VIEWER" : "Visualizzatore di carte",
+  "LBL_TOGGLE_AUTO_COMBAT": "Combattimento automatico",
   "MENSAJE_MAPA_ENTREGA": "Mappa di consegna: ",
   "MENSAJE_ENTREGAR_A": "Consegnare a: "
 }

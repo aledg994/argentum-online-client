@@ -464,6 +464,8 @@ Public Function HandleIncomingData(ByVal message As Network.Reader) As Boolean
                 Call HandleGuildConfig
             Case ServerPacketID.eShowPickUpObj
                 Call HandleShowPickUpObj
+            Case ServerPacketID.eAutoCombatState
+                Call HandleAutoCombatState
                 #If PYMMO = 0 Then
                 Case ServerPacketID.eAccountCharacterList
                     Call HandleAccountCharacterList
@@ -5612,6 +5614,14 @@ Private Sub HandleLegionarySecure()
         Call AddtoRichTextBox(frmMain.RecTxt, JsonLanguage.Item("MENSAJE_SEGURO_LEGION_DESACTIVADO"), 65, 190, 156, False, False, False)
         frmMain.ImgLegionarySecure = LoadInterface("boton-demonio-off.bmp")
     End If
+End Sub
+
+Private Sub HandleAutoCombatState()
+    On Error GoTo HandleAutoCombatState_Err
+    AutoCombatState = reader.ReadInt8
+    Exit Sub
+HandleAutoCombatState_Err:
+    Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleAutoCombatState", Erl)
 End Sub
 
 Private Sub HandleStopped()

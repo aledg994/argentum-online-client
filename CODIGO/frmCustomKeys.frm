@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmCustomKeys 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Configuración de controles"
-   ClientHeight    =   8265
+   ClientHeight    =   8880
    ClientLeft      =   45
    ClientTop       =   315
    ClientWidth     =   6075
@@ -18,11 +18,22 @@ Begin VB.Form frmCustomKeys
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   551
+   ScaleHeight     =   592
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   405
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.TextBox txConfig 
+      BackColor       =   &H00FFFFFF&
+      ForeColor       =   &H00000000&
+      Height          =   300
+      Index           =   40
+      Left            =   240
+      Locked          =   -1  'True
+      TabIndex        =   97
+      Top             =   8475
+      Width           =   1770
+   End
    Begin VB.TextBox txConfig 
       BackColor       =   &H00FFFFFF&
       ForeColor       =   &H00000000&
@@ -529,9 +540,9 @@ Begin VB.Form frmCustomKeys
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   975
-      Left            =   1800
+      Left            =   2280
       TabIndex        =   0
-      Top             =   8280
+      Top             =   9000
       Width           =   3735
       Begin VB.TextBox Text1 
          BeginProperty Font 
@@ -609,6 +620,18 @@ Begin VB.Form frmCustomKeys
          Top             =   240
          Width           =   1215
       End
+   End
+   Begin VB.Label lblSalirDel 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Accion automática contra NPC"
+      ForeColor       =   &H00000000&
+      Height          =   195
+      Index           =   29
+      Left            =   240
+      TabIndex        =   98
+      Top             =   8250
+      Width           =   2160
    End
    Begin VB.Label lblSalirDel 
       AutoSize        =   -1  'True
@@ -1330,6 +1353,7 @@ Private Sub Form_Load()
     lblSalirDel(34).Caption = JsonLanguage.Item("MENSAJE_533") ' Acción Click 2
     lblSalirDel(35).Caption = JsonLanguage.Item("MENSAJE_534") ' (Clan) Llamada de Clan
     lblSalirDel(36).Caption = JsonLanguage.Item("MENSAJE_535") ' (Clan) Marca de Clan
+    lblSalirDel(37).Caption = JsonLanguage.Item("LBL_TOGGLE_AUTO_COMBAT")
     cmdAccion(0).Caption = JsonLanguage.Item("MENSAJE_536") ' Guardar
     lblHotKeys(22).Caption = JsonLanguage.Item("MENSAJE_537") ' HotKeys
     Option1.Caption = JsonLanguage.Item("MENSAJE_538") ' Clásica

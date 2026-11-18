@@ -25,6 +25,15 @@ Public LegionarySecureX As Boolean
 Public QuePestañaInferior As Byte
 Public newUser As Boolean
 
+Public Enum e_AutoCombatState
+    e_AutoCombatOff = 0
+    e_AutoCombatArmed = 1
+    e_AutoCombatRepeating = 2
+    e_AutoCombatMeditating = 3
+End Enum
+
+Public AutoCombatState As e_AutoCombatState
+
 Public Enum tMacro
     dobleclick = 1
     Coordenadas = 2

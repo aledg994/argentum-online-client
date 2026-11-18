@@ -571,6 +571,20 @@ WriteLegionarySecure_Err:
 End Sub
 
 ''
+' Writes the "ToggleAutoCombat" message to the outgoing data buffer.
+'
+' @remarks  The data is not actually sent until the buffer is properly flushed.
+Public Sub WriteToggleAutoCombat()
+    On Error GoTo WriteToggleAutoCombat_Err
+    Call Writer.WriteInt16(ClientPacketID.eToggleAutoCombat)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteToggleAutoCombat_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Argentum20.Protocol_Writes.WriteToggleAutoCombat", Erl)
+End Sub
+
+''
 ' Writes the "RequestGuildLeaderInfo" message to the outgoing data buffer.
 '
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
