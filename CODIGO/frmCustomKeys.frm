@@ -1353,7 +1353,7 @@ Private Sub Form_Load()
     lblSalirDel(34).Caption = JsonLanguage.Item("MENSAJE_533") ' Acción Click 2
     lblSalirDel(35).Caption = JsonLanguage.Item("MENSAJE_534") ' (Clan) Llamada de Clan
     lblSalirDel(36).Caption = JsonLanguage.Item("MENSAJE_535") ' (Clan) Marca de Clan
-    lblSalirDel(37).Caption = JsonLanguage.Item("LBL_TOGGLE_AUTO_COMBAT")
+    lblSalirDel(29).Caption = JsonLanguage.Item("LBL_TOGGLE_AUTO_COMBAT")
     cmdAccion(0).Caption = JsonLanguage.Item("MENSAJE_536") ' Guardar
     lblHotKeys(22).Caption = JsonLanguage.Item("MENSAJE_537") ' HotKeys
     Option1.Caption = JsonLanguage.Item("MENSAJE_538") ' Clásica
