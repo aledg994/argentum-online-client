@@ -28,10 +28,10 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   300
       Index           =   40
-      Left            =   240
+      Left            =   4080
       Locked          =   -1  'True
       TabIndex        =   97
-      Top             =   8475
+      Top             =   4440
       Width           =   1770
    End
    Begin VB.TextBox txConfig 
@@ -39,7 +39,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   300
       Index           =   39
-      Left            =   4155
+      Left            =   4080
       Locked          =   -1  'True
       TabIndex        =   95
       Top             =   6840
@@ -50,7 +50,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   300
       Index           =   38
-      Left            =   4155
+      Left            =   4080
       Locked          =   -1  'True
       TabIndex        =   93
       Top             =   6240
@@ -266,17 +266,17 @@ Begin VB.Form frmCustomKeys
    Begin VB.OptionButton Option2 
       Caption         =   "Moderna"
       Height          =   255
-      Left            =   4110
+      Left            =   4080
       TabIndex        =   52
-      Top             =   5040
+      Top             =   5550
       Width           =   1215
    End
    Begin VB.OptionButton Option1 
       Caption         =   "Clásica"
       Height          =   255
-      Left            =   4110
+      Left            =   4080
       TabIndex        =   51
-      Top             =   4680
+      Top             =   5190
       Width           =   1215
    End
    Begin VB.ComboBox AccionList3 
@@ -313,9 +313,9 @@ Begin VB.Form frmCustomKeys
       Caption         =   "Guardar"
       Height          =   495
       Index           =   0
-      Left            =   4080
+      Left            =   2250
       TabIndex        =   43
-      Top             =   5400
+      Top             =   8325
       Width           =   1695
    End
    Begin VB.TextBox txConfig 
@@ -624,14 +624,14 @@ Begin VB.Form frmCustomKeys
    Begin VB.Label lblSalirDel 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Accion automática contra NPC"
+      Caption         =   "Accion automática (NPC)"
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   29
-      Left            =   240
+      Left            =   4080
       TabIndex        =   98
-      Top             =   8250
-      Width           =   2160
+      Top             =   4200
+      Width           =   1770
    End
    Begin VB.Label lblSalirDel 
       AutoSize        =   -1  'True
@@ -640,7 +640,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   28
-      Left            =   4155
+      Left            =   4080
       TabIndex        =   96
       Top             =   6600
       Width           =   1860
@@ -652,7 +652,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   27
-      Left            =   4155
+      Left            =   4080
       TabIndex        =   94
       Top             =   6000
       Width           =   1845
@@ -868,7 +868,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   20
-      Left            =   4125
+      Left            =   4080
       TabIndex        =   59
       Top             =   0
       Width           =   540
@@ -880,7 +880,7 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   19
-      Left            =   4125
+      Left            =   4080
       TabIndex        =   58
       Top             =   600
       Width           =   1005
@@ -925,9 +925,9 @@ Begin VB.Form frmCustomKeys
       ForeColor       =   &H00000000&
       Height          =   195
       Index           =   32
-      Left            =   4110
+      Left            =   4080
       TabIndex        =   50
-      Top             =   4320
+      Top             =   4800
       Width           =   1785
    End
    Begin VB.Label lblSalirDel 

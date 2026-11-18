@@ -265,7 +265,7 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
                     Call MainTimer.Restart(TimersIndex.AttackSpell)
                 End If
             End If
-        Case BindKeys(2).KeyCode
+        Case BindKeys(eLoot).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
@@ -277,7 +277,7 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
             Else
                 Call AddtoRichTextBox(frmMain.RecTxt, JsonLanguage.Item("MENSAJE_NO_PODES_AGARRAR_OBJETOS_MIENTRAS_COMERCIAS"), 255, 0, 32, False, False, False)
             End If
-        Case BindKeys(3).KeyCode
+        Case BindKeys(eDrop).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
@@ -289,19 +289,19 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
             Else
                 Call AddtoRichTextBox(frmMain.RecTxt, JsonLanguage.Item("MENSAJE_NO_PODES_TIRAR_OBJETOS_MIENTRAS_COMERCIAS"), 255, 0, 32, False, False, False)
             End If
-        Case BindKeys(6).KeyCode
+        Case BindKeys(eChangeSafe).keyCode
             If SeguroGame Then
                 Call AddtoRichTextBox(frmMain.RecTxt, JsonLanguage.Item("MENSAJE_DESACTIVAR_SEGURO_CON_SEG"), 255, 0, 0, True, False, False)
             Else
                 Call WriteSafeToggle
             End If
-        Case BindKeys(12).KeyCode
+        Case BindKeys(eShowOnline).keyCode
             MostrarOnline = Not MostrarOnline
-        Case BindKeys(7).KeyCode
+        Case BindKeys(eHideNames).keyCode
             Nombres = Not Nombres
-        Case BindKeys(8).KeyCode
+        Case BindKeys(ePartyToggle).keyCode
             Call WriteParyToggle
-        Case BindKeys(9).KeyCode
+        Case BindKeys(eSteal).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
@@ -309,11 +309,11 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
                 Exit Function
             End If
             Call WriteWork(eSkill.Robar)
-        Case BindKeys(18).KeyCode
+        Case BindKeys(eClanCall).keyCode
             If IntervaloPermiteLLamadaClan Then Call WriteLlamadadeClan
-        Case BindKeys(20).KeyCode
+        Case BindKeys(eClanMark).keyCode
             If IntervaloPermiteLLamadaClan Then Call WriteMarcaDeClan
-        Case BindKeys(5).KeyCode
+        Case BindKeys(eEquipItem).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
@@ -321,14 +321,14 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
                 Exit Function
             End If
             Call EquipSelectedItem
-        Case BindKeys(4).KeyCode
+        Case BindKeys(eUseItem).keyCode
             Call UseItemKey
-        Case BindKeys(10).KeyCode
+        Case BindKeys(eRefreshPosition).keyCode
             If MainTimer.Check(TimersIndex.SendRPU) Then
                 Call WriteRequestPositionUpdate
                 Beep
             End If
-        Case BindKeys(11).KeyCode
+        Case BindKeys(eHide).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
@@ -336,9 +336,9 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
                 Exit Function
             End If
             Call WriteWork(eSkill.Ocultarse)
-        Case BindKeys(19).KeyCode
+        Case BindKeys(eGameStats).keyCode
             Call SaveSetting("OPCIONES", "FPSFLAG", FPSFLAG)
-        Case BindKeys(21).KeyCode
+        Case BindKeys(eMeditate).keyCode
             If UserStats.minman = UserStats.maxman Then Exit Function
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
@@ -347,9 +347,9 @@ Public Function Accionar(ByVal KeyCode As Integer) As Boolean
                 Exit Function
             End If
             Call WriteMeditate
-        Case BindKeys(22).KeyCode
+        Case BindKeys(eExitGame).keyCode
             Call WriteQuit
-        Case BindKeys(23).KeyCode
+        Case BindKeys(eTaming).keyCode
             If UserStats.estado = 1 Then
                 With FontTypes(FontTypeNames.FONTTYPE_INFO)
                     Call ShowConsoleMsg(JsonLanguage.Item("MENSAJE_ESTAS_MUERTO"), .red, .green, .blue, .bold, .italic) ' MENSAJE_ESTAS_MUERTO=¡Estás muerto!
