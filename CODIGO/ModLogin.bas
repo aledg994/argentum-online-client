@@ -348,6 +348,7 @@ Public Sub LoadCharacterSelectionScreen()
         UserParalizado = False
         UserInmovilizado = False
         UserStopped = False
+        AutoCombatState = e_AutoCombatState.e_AutoCombatOff
         InvasionActual = 0
         frmMain.Evento.enabled = False
         'BUG CLONES

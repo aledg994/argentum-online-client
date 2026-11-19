@@ -787,5 +787,6 @@
     "CAPTION_CARD_VIEWER" : "Visor de cartas",
 	"LBL_TOGGLE_AUTO_COMBAT": "Acción automática (NPC)",
 	"MENSAJE_MAPA_ENTREGA" : "Mapa de entrega: ",
-	"MENSAJE_ENTREGAR_A" : "Entregar a: "
+	"MENSAJE_ENTREGAR_A" : "Entregar a: ",
+	"MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTOCOMBATE ACTIVO]"
 }

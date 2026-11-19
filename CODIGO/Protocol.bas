@@ -798,6 +798,7 @@ Public Sub HandleDisconnect()
     Group.Clear
     InviCounter = 0
     DrogaCounter = 0
+    AutoCombatState = e_AutoCombatState.e_AutoCombatOff
     frmMain.Contadores.enabled = False
     InvasionActual = 0
     frmMain.Evento.enabled = False
@@ -2123,6 +2124,7 @@ Private Sub HandleMostrarCuenta()
         UserParalizado = False
         UserInmovilizado = False
         UserStopped = False
+        AutoCombatState = e_AutoCombatState.e_AutoCombatOff
         InvasionActual = 0
         frmMain.Evento.enabled = False
         'BUG CLONES
