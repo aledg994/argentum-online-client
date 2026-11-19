@@ -30,6 +30,18 @@ Public Const hotkey_arrow_posx = 200 + 36 * 5 - 26
 Public Const hotkey_arrow_posy = 10
 Public Const GRH_HOTKEY_ARROW_HIDE = 19204
 Public Const GRH_HOTKEY_ARROW_SHOW = 19205
+
+Private Type t_CursorPoint
+    x As Long
+    y As Long
+End Type
+
+Private Declare Function GetCursorPos Lib "user32" (lpPoint As t_CursorPoint) As Long
+Private Declare Function ScreenToClient Lib "user32" (ByVal hWnd As Long, lpPoint As t_CursorPoint) As Long
+
+Private Const DRAGGED_ITEM_HALF_SIZE As Long = 16
+Private Const DRAGGED_ITEM_ALPHA     As Long = 200
+
 Public Sub RenderWalkableMapLayers(ByVal minX As Integer, ByVal maxX As Integer, _
                                    ByVal minY As Integer, ByVal maxY As Integer, _
                                    ByVal startX As Integer, ByVal startY As Integer)
@@ -558,6 +570,7 @@ Sub RenderScreen(ByVal center_x As Integer, _
             End If
         End If
     End If
+    Call DrawInventoryDraggedItem
     Call renderCooldowns(710 + gameplay_render_offset.x, 25 + gameplay_render_offset.y)
     If InvasionActual Then
         Call Engine_Draw_Box(190 + gameplay_render_offset.x, 550 + gameplay_render_offset.y, 356, 36, RGBA_From_Comp(0, 0, 0, 200))
@@ -763,4 +776,22 @@ Private Sub RenderAutoCombatIndicator()
     Exit Sub
 RenderAutoCombatIndicator_Err:
     Call RegistrarError(Err.Number, Err.Description, "TileEngine_RenderScreen.RenderAutoCombatIndicator", Erl)
+End Sub
+
+Private Sub DrawInventoryDraggedItem()
+    On Error GoTo DrawInventoryDraggedItem_Err
+    Dim draggedGrhIndex As Long
+    Dim cursorPoint     As t_CursorPoint
+    Dim draggedColor(3) As RGBA
+    If gDragState.active Then Exit Sub
+    If frmMain.Inventario Is Nothing Then Exit Sub
+    draggedGrhIndex = frmMain.Inventario.draggedGrhIndex
+    If draggedGrhIndex <= 0 Then Exit Sub
+    Call GetCursorPos(cursorPoint)
+    Call ScreenToClient(frmMain.renderer.hWnd, cursorPoint)
+    Call RGBAList(draggedColor, 255, 255, 255, DRAGGED_ITEM_ALPHA)
+    Call Draw_GrhColor(draggedGrhIndex, cursorPoint.x - DRAGGED_ITEM_HALF_SIZE, cursorPoint.y - DRAGGED_ITEM_HALF_SIZE, draggedColor)
+    Exit Sub
+DrawInventoryDraggedItem_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TileEngine_RenderScreen.DrawInventoryDraggedItem", Erl)
 End Sub
