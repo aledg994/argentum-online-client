@@ -347,6 +347,16 @@ SlotDrag_Err:
     Resume Next
 End Property
 
+Public Property Get DraggedGrhIndex() As Long
+    On Error GoTo DraggedGrhIndex_Err
+    If Dragging > 0 Then
+        DraggedGrhIndex = UserInventory(Dragging).grhIndex
+    End If
+    Exit Property
+DraggedGrhIndex_Err:
+    Call RegistrarError(Err.Number, Err.Description, "clsGrapchicalInventory.DraggedGrhIndex", Erl)
+End Property
+
 Public Property Get NeedsRedraw() As Boolean
     On Error GoTo NeedsRedraw_Err
     NeedsRedraw = InvNeedsRedraw
