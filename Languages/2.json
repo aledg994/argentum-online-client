@@ -787,5 +787,6 @@
     "CAPTION_CARD_VIEWER" : "Card Viewer",
 	"LBL_TOGGLE_AUTO_COMBAT": "Auto combat (NPC)",
 	"MENSAJE_MAPA_ENTREGA": "Delivery map: ",
-	"MENSAJE_ENTREGAR_A": "Deliver to: "
+	"MENSAJE_ENTREGAR_A": "Deliver to: ",
+	"MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTO-COMBAT ON]"
 }

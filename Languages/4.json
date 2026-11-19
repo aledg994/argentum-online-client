@@ -787,5 +787,6 @@
   "CAPTION_CARD_VIEWER" : "Visualiseur de cartes",
   "LBL_TOGGLE_AUTO_COMBAT": "Combat automatique (NPC)",
   "MENSAJE_MAPA_ENTREGA": "Carte de livraison : ",
-  "MENSAJE_ENTREGAR_A": "Livrer à : "
+  "MENSAJE_ENTREGAR_A": "Livrer à : ",
+  "MENSAJE_AUTOCOMBATE_ACTIVO": "[COMBAT AUTO ACTIF]"
 }

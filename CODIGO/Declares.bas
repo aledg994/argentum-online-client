@@ -34,6 +34,9 @@ End Enum
 
 Public AutoCombatState As e_AutoCombatState
 
+Public Const AUTOCOMBAT_LABEL_X As Integer = 10
+Public Const AUTOCOMBAT_LABEL_Y As Integer = 580
+
 Public Enum tMacro
     dobleclick = 1
     Coordenadas = 2

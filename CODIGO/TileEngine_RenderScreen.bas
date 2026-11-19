@@ -581,6 +581,7 @@ Sub RenderScreen(ByVal center_x As Integer, _
         Call Engine_Text_Render(Leyenda, CInt(clicX - 100), CInt(clicY - 130), TempColor(), 1, False)
     End If
     Call RenderScreen_NombreMapa
+    Call RenderAutoCombatIndicator
     If PescandoEspecial Then
         Call RGBAList(ColorBarraPesca, 255, 255, 255)
         Dim Grh As Grh
@@ -749,4 +750,17 @@ Private Sub DrawHotkey(ByVal HkIndex As Integer, ByVal PosX As Integer, ByVal Po
     Else
         Call Engine_Text_Render(HkIndex + 1, PosX + 12, PosY + 26, COLOR_WHITE, 1, True)
     End If
+End Sub
+
+Private Sub RenderAutoCombatIndicator()
+    On Error GoTo RenderAutoCombatIndicator_Err
+    Dim labelColor(3) As RGBA
+
+    If AutoCombatState = e_AutoCombatState.e_AutoCombatOff Then Exit Sub
+
+    Call RGBAList(labelColor(), 0, 255, 0)
+    Call Engine_Text_Render(JsonLanguage.Item("MENSAJE_AUTOCOMBATE_ACTIVO"), AUTOCOMBAT_LABEL_X + gameplay_render_offset.x, AUTOCOMBAT_LABEL_Y + gameplay_render_offset.y, labelColor(), 1, True)
+    Exit Sub
+RenderAutoCombatIndicator_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TileEngine_RenderScreen.RenderAutoCombatIndicator", Erl)
 End Sub
