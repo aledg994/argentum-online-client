@@ -4233,23 +4233,37 @@ Public Sub UpdateExpBar()
 End Sub
 
 Public Sub UpdateBuff()
-    If UserStats.StrState = eHighBuff Then
-        frmMain.Fuerzalbl.ForeColor = RGB(204, 0, 0)
-    ElseIf UserStats.StrState = eMinBuff Then
-        frmMain.Fuerzalbl.ForeColor = RGB(204, 100, 100)
-    Else
-        frmMain.Fuerzalbl.ForeColor = vbWhite
-    End If
-    If UserStats.AgiState = eHighBuff Then
-        frmMain.AgilidadLbl.ForeColor = RGB(204, 0, 0)
-    ElseIf UserStats.AgiState = eMinBuff Then
-        frmMain.AgilidadLbl.ForeColor = RGB(204, 100, 100)
-    Else
-        frmMain.AgilidadLbl.ForeColor = vbWhite
-    End If
+    On Error GoTo UpdateBuff_Err
+    frmMain.Fuerzalbl.ForeColor = GetBuffColor(UserStats.str, UserStats.StrBase)
+    frmMain.AgilidadLbl.ForeColor = GetBuffColor(UserStats.Agi, UserStats.AgiBase)
     frmMain.Fuerzalbl.Caption = UserStats.str
     frmMain.AgilidadLbl.Caption = UserStats.Agi
+    Exit Sub
+UpdateBuff_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmMain.UpdateBuff", Erl)
 End Sub
+
+Private Function GetBuffColor(ByVal currentValue As Integer, ByVal baseValue As Integer) As Long
+    On Error GoTo GetBuffColor_Err
+    Dim maxValue     As Integer
+    Dim buffRatio    As Single
+    Dim redValue     As Integer
+    Dim channelValue As Integer
+    If baseValue <= 0 Or currentValue <= baseValue Then
+        GetBuffColor = vbWhite
+        Exit Function
+    End If
+    maxValue = baseValue * BUFF_ATTRIBUTE_MULTIPLIER
+    buffRatio = (currentValue - baseValue) / (maxValue - baseValue)
+    If buffRatio > 1 Then buffRatio = 1
+    redValue = BUFF_COLOR_CHANNEL_MAX - (BUFF_COLOR_CHANNEL_MAX - BUFF_COLOR_FULL_RED) * buffRatio
+    channelValue = BUFF_COLOR_CHANNEL_MAX * (1 - buffRatio)
+    GetBuffColor = RGB(redValue, channelValue, channelValue)
+    Exit Function
+GetBuffColor_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmMain.GetBuffColor", Erl)
+    GetBuffColor = vbWhite
+End Function
 
 Public Sub OnDragEnd()
     If gDragState.PosX > hotkey_render_posX And gDragState.PosX < hotkey_render_posX + 36 * 10 And gDragState.PosY > renderer.Top + renderer.Height - hotkey_render_posY And _
