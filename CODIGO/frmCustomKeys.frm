@@ -1274,6 +1274,7 @@ Private Sub GuardaConfigEnVariables()
     ACCION1 = IndexToMouseAction(AccionList1.ListIndex)
     ACCION2 = IndexToMouseAction(AccionList2.ListIndex)
     ACCION3 = IndexToMouseAction(AccionList3.ListIndex)
+    Call InvalidateHotkeyLabels
     Exit Sub
 GuardaConfigEnVariables_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCustomKeys.GuardaConfigEnVariables", Erl)
