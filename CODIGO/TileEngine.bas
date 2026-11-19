@@ -159,7 +159,13 @@ Public Type DialogEffect
     offset As Position
     duration As Integer
     Animated As Boolean
+    slideY As Single
 End Type
+
+Public Const MAX_STACKED_DIALOG_EFFECTS As Integer = 5
+Public Const DIALOG_EFFECT_LINE_HEIGHT  As Integer = 14
+Public Const CHAR_DIALOG_EFFECT_LIFE_MS As Long = 1300
+Public Const DIALOG_EFFECT_SLIDE_SPEED  As Single = 2
 
 Public Enum eTipoUsuario
     User = 0
