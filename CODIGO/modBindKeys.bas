@@ -36,6 +36,23 @@ Public ACCION3          As e_MouseAction
 Public BindKeys()       As tBindedKey
 Public BotonElegido     As Integer
 Public MacroTipoElegido As Byte
+Public Const HOTKEY_LABEL_MAX_CHARS As Integer = 4
+Private Const HOTKEY_LABEL_DELETE   As String = "Supr"
+Private Const HOTKEY_LABEL_INSERT   As String = "Ins"
+Private Const HOTKEY_LABEL_HOME     As String = "Ini"
+Private Const HOTKEY_LABEL_END      As String = "Fin"
+Private Const HOTKEY_LABEL_PAGEUP   As String = "RPg"
+Private Const HOTKEY_LABEL_PAGEDOWN As String = "APg"
+Private Const HOTKEY_LABEL_SPACE    As String = "Esp"
+Private Const HOTKEY_LABEL_TAB      As String = "Tab"
+Private Const HOTKEY_LABEL_BACK     As String = "Bor"
+Private Const HOTKEY_LABEL_SHIFT    As String = "Shf"
+Private Const HOTKEY_LABEL_CONTROL  As String = "Ctrl"
+Private Const HOTKEY_LABEL_ALT      As String = "Alt"
+Private Const HOTKEY_LABEL_NUMPAD   As String = "N"
+Public HotkeyLabels(HotKeyCount - 1)      As String
+Public HotkeyLabelWidths(HotKeyCount - 1) As Integer
+Private hotkeyLabelsReady                 As Boolean
 
 Public Enum e_KeyAction
     eAttack = 1
@@ -168,7 +185,7 @@ Public Sub LoadBindedKeys()
 
     Set DefaultBinds = Nothing
     Set UserBinds = Nothing
-
+    Call InvalidateHotkeyLabels
     Exit Sub
 
 LoadBindedKeys_Err:
@@ -226,6 +243,7 @@ Sub LoadDefaultBinds()
         BindKeys(Index).Name = General_Field_Read(2, temp, ",")
     Next Index
     Set DefaultBinds = Nothing
+    Call InvalidateHotkeyLabels
     Exit Sub
 LoadDefaultBinds_Err:
     Call RegistrarError(Err.Number, Err.Description, "modBindKeys.LoadDefaultBinds", Erl)
@@ -243,6 +261,7 @@ Sub LoadDefaultBinds2()
         BindKeys(Index).Name = General_Field_Read(2, temp, ",")
     Next Index
     Set DefaultBinds = Nothing
+    Call InvalidateHotkeyLabels
     Exit Sub
 LoadDefaultBinds2_Err:
     Call RegistrarError(Err.Number, Err.Description, "modBindKeys.LoadDefaultBinds2", Erl)
@@ -430,6 +449,59 @@ Public Sub DoHotKey(ByVal HkSlot As Byte)
             Call WriteUseHKeySlot(HkSlot)
         End If
     End If
+End Sub
+
+Public Function GetHotkeyLabel(ByVal HkSlot As Integer) As String
+    On Error GoTo GetHotkeyLabel_Err
+    Dim bindIndex As Integer
+    bindIndex = e_KeyAction.eHKey1 + HkSlot
+    Dim boundKeyCode As Integer
+    boundKeyCode = BindKeys(bindIndex).keyCode
+    If boundKeyCode = 0 Then Exit Function
+    Select Case boundKeyCode
+        Case vbKeyDelete:   GetHotkeyLabel = HOTKEY_LABEL_DELETE
+        Case vbKeyInsert:   GetHotkeyLabel = HOTKEY_LABEL_INSERT
+        Case vbKeyHome:     GetHotkeyLabel = HOTKEY_LABEL_HOME
+        Case vbKeyEnd:      GetHotkeyLabel = HOTKEY_LABEL_END
+        Case vbKeyPageUp:   GetHotkeyLabel = HOTKEY_LABEL_PAGEUP
+        Case vbKeyPageDown: GetHotkeyLabel = HOTKEY_LABEL_PAGEDOWN
+        Case vbKeySpace:    GetHotkeyLabel = HOTKEY_LABEL_SPACE
+        Case vbKeyTab:      GetHotkeyLabel = HOTKEY_LABEL_TAB
+        Case vbKeyBack:     GetHotkeyLabel = HOTKEY_LABEL_BACK
+        Case vbKeyShift:    GetHotkeyLabel = HOTKEY_LABEL_SHIFT
+        Case vbKeyControl:  GetHotkeyLabel = HOTKEY_LABEL_CONTROL
+        Case vbKeyMenu:     GetHotkeyLabel = HOTKEY_LABEL_ALT
+        Case vbKeyNumpad0 To vbKeyNumpad9
+            GetHotkeyLabel = HOTKEY_LABEL_NUMPAD & CStr(boundKeyCode - vbKeyNumpad0)
+        Case Else
+            GetHotkeyLabel = Left$(BindKeys(bindIndex).name, HOTKEY_LABEL_MAX_CHARS)
+    End Select
+    Exit Function
+GetHotkeyLabel_Err:
+    Call RegistrarError(Err.Number, Err.Description, "modBindKeys.GetHotkeyLabel", Erl)
+End Function
+
+' Llamar siempre que se modifique BindKeys (carga, defaults o guardado desde frmCustomKeys)
+Public Sub InvalidateHotkeyLabels()
+    hotkeyLabelsReady = False
+End Sub
+
+Public Sub EnsureHotkeyLabels()
+    On Error GoTo EnsureHotkeyLabels_Err
+    If hotkeyLabelsReady Then Exit Sub
+    Dim SlotIndex As Integer
+    For SlotIndex = 0 To HotKeyCount - 1
+        HotkeyLabels(SlotIndex) = GetHotkeyLabel(SlotIndex)
+        If LenB(HotkeyLabels(SlotIndex)) <> 0 Then
+            HotkeyLabelWidths(SlotIndex) = Engine_Text_Width(HotkeyLabels(SlotIndex), False, 1)
+        Else
+            HotkeyLabelWidths(SlotIndex) = 0
+        End If
+    Next SlotIndex
+    hotkeyLabelsReady = True
+    Exit Sub
+EnsureHotkeyLabels_Err:
+    Call RegistrarError(Err.Number, Err.Description, "modBindKeys.EnsureHotkeyLabels", Erl)
 End Sub
 
 Public Sub TirarItem()

@@ -30,6 +30,7 @@ Public Const hotkey_arrow_posx = 200 + 36 * 5 - 26
 Public Const hotkey_arrow_posy = 10
 Public Const GRH_HOTKEY_ARROW_HIDE = 19204
 Public Const GRH_HOTKEY_ARROW_SHOW = 19205
+Public Const HOTKEY_SLOT_SIZE = 32
 
 Private Type t_CursorPoint
     x As Long
@@ -561,6 +562,7 @@ Sub RenderScreen(ByVal center_x As Integer, _
         If HideHotkeys Then
             Call Draw_GrhIndex(GRH_HOTKEY_ARROW_SHOW, ArrowPos.x, ArrowPos.y)
         Else
+            Call EnsureHotkeyLabels
             For i = 0 To 9
                 Call DrawHotkey(i, i * 36 + hotkey_render_posX, frmMain.renderer.Height - hotkey_render_posY)
             Next
@@ -758,10 +760,8 @@ Private Sub DrawHotkey(ByVal HkIndex As Integer, ByVal PosX As Integer, ByVal Po
             Call Draw_GrhIndex(HechizoData(HotkeyList(HkIndex).Index).IconoIndex, PosX + 1, PosY + 1)
         End If
     End If
-    If HkIndex = 9 Then
-        Call Engine_Text_Render("0", PosX + 12, PosY + 26, COLOR_WHITE, 1, True)
-    Else
-        Call Engine_Text_Render(HkIndex + 1, PosX + 12, PosY + 26, COLOR_WHITE, 1, True)
+    If LenB(HotkeyLabels(HkIndex)) <> 0 Then
+        Call Engine_Text_Render(HotkeyLabels(HkIndex), PosX + (HOTKEY_SLOT_SIZE - HotkeyLabelWidths(HkIndex)) \ 2, PosY + 26, COLOR_WHITE, 1, False)
     End If
 End Sub
 
