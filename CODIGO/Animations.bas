@@ -126,6 +126,10 @@ Public Sub StartFx(ByRef animationState As tAnimationPlaybackState, ByVal Fx As 
         Call StartAnimation(animationState, animationState.ComposedAnimation)
         Exit Sub
     End If
+    'dont restart the same simple fx while it is still playing (ej: meditacion + ChangeHeading)
+    If animationState.fx = fx And animationState.PlaybackState <> Stopped Then
+        Exit Sub
+    End If
     Call Initialize(animationState)
     animationState.Fx = Fx
     animationState.CurrentGrh = FxData(Fx).Animacion
