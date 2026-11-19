@@ -3927,16 +3927,14 @@ Private Sub HandleFYA()
     UserStats.str = UserAtributos(eAtributos.Fuerza)
     UserStats.Agi = UserAtributos(eAtributos.Agilidad)
     DrogaCounter = Reader.ReadInt16()
-    If UserStats.str >= 35 Then
-        UserStats.StrState = eHighBuff
-    ElseIf UserStats.str >= 25 Then
+    UserStats.StrBase = reader.ReadInt8()
+    UserStats.AgiBase = reader.ReadInt8()
+    If UserStats.str > UserStats.StrBase Then
         UserStats.StrState = eMinBuff
     Else
         UserStats.StrState = eNormal
     End If
-    If UserStats.Agi >= 35 Then
-        UserStats.AgiState = eHighBuff
-    ElseIf UserStats.Agi >= 25 Then
+    If UserStats.Agi > UserStats.AgiBase Then
         UserStats.AgiState = eMinBuff
     Else
         UserStats.AgiState = eNormal

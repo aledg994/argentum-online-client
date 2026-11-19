@@ -926,6 +926,10 @@ Enum eModoHechizos
     SinBloqueo
 End Enum
 
+Public Const BUFF_ATTRIBUTE_MULTIPLIER As Byte = 2
+Public Const BUFF_COLOR_FULL_RED       As Byte = 204
+Public Const BUFF_COLOR_CHANNEL_MAX    As Byte = 255
+
 Enum e_BuffSate
     eNormal = 0
     eMinBuff = 1
@@ -959,6 +963,8 @@ Public Type t_UserStats
     Agi As Byte
     StrState As e_BuffSate
     AgiState As e_BuffSate
+    StrBase As Byte
+    AgiBase As Byte
 End Type
 
 Public Nombres                                  As Boolean
