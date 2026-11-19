@@ -672,27 +672,122 @@ SetCharacterFx_Err:
 End Sub
 
 Public Sub SetCharacterDialogFx(ByVal charindex As Integer, ByVal text As String, color As RGBA)
-    With charlist(charindex)
-        Dim Index As Integer
-        If UBound(.DialogEffects) > 0 Then
-            For Index = 1 To UBound(.DialogEffects)
-                If .DialogEffects(Index).text = vbNullString Then
-                    Exit For
+    On Error GoTo SetCharacterDialogFx_Err
+    Dim effectIndex As Integer
+    Dim freeIndex   As Integer
+    Dim oldestIndex As Integer
+    Dim activeCount As Integer
+    If UBound(charlist(charindex).DialogEffects) = 0 Then
+        ReDim charlist(charindex).DialogEffects(1 To MAX_STACKED_DIALOG_EFFECTS)
+    ElseIf UBound(charlist(charindex).DialogEffects) < MAX_STACKED_DIALOG_EFFECTS Then
+        ReDim Preserve charlist(charindex).DialogEffects(1 To MAX_STACKED_DIALOG_EFFECTS)
+    End If
+    ' Libera los vencidos, cuenta los activos y ubica el más viejo
+    For effectIndex = 1 To UBound(charlist(charindex).DialogEffects)
+        With charlist(charindex).DialogEffects(effectIndex)
+            If LenB(.text) <> 0 Then
+                If FrameTime - .start > CHAR_DIALOG_EFFECT_LIFE_MS Then
+                    .text = vbNullString
                 End If
-            Next
-            If Index > UBound(.DialogEffects) Then
-                ReDim .DialogEffects(1 To UBound(.DialogEffects) + 1)
             End If
-        Else
-            ReDim .DialogEffects(1)
-            Index = 1
-        End If
-        With .DialogEffects(Index)
-            .color = color
-            .start = FrameTime
-            .text = text
+            If LenB(.text) = 0 Then
+                If freeIndex = 0 Then freeIndex = effectIndex
+            Else
+                activeCount = activeCount + 1
+                If oldestIndex = 0 Then
+                    oldestIndex = effectIndex
+                ElseIf .start < charlist(charindex).DialogEffects(oldestIndex).start Then
+                    oldestIndex = effectIndex
+                End If
+            End If
         End With
+    Next effectIndex
+    ' Si ya está lleno, se descarta el de arriba (el más viejo)
+    If activeCount >= MAX_STACKED_DIALOG_EFFECTS Then
+        charlist(charindex).DialogEffects(oldestIndex).text = vbNullString
+        freeIndex = oldestIndex
+    End If
+    ' Los que siguen activos suben un renglón
+    For effectIndex = 1 To UBound(charlist(charindex).DialogEffects)
+        With charlist(charindex).DialogEffects(effectIndex)
+            If LenB(.text) <> 0 Then
+                .offset.y = .offset.y - DIALOG_EFFECT_LINE_HEIGHT
+            End If
+        End With
+    Next effectIndex
+    ' El nuevo entra abajo, sobre el cuerpo
+    With charlist(charindex).DialogEffects(freeIndex)
+        .color = color
+        .start = FrameTime
+        .text = text
+        .offset.x = 0
+        .offset.y = 0
+        .slideY = 0
     End With
+    Exit Sub
+SetCharacterDialogFx_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TileEngine_Chars.SetCharacterDialogFx", Erl)
+End Sub
+
+Public Sub AddStackedDialogEffect(ByVal tileX As Integer, ByVal tileY As Integer, ByVal text As String, ByVal color As Long, _
+                                  ByVal duration As Integer, ByVal OffsetX As Integer, ByVal OffsetY As Integer, ByVal Animated As Boolean)
+    On Error GoTo AddStackedDialogEffect_Err
+    Dim effectIndex As Integer
+    Dim freeIndex   As Integer
+    Dim oldestIndex As Integer
+    Dim activeCount As Integer
+    If UBound(MapData(tileX, tileY).DialogEffects) = 0 Then
+        ReDim MapData(tileX, tileY).DialogEffects(1 To MAX_STACKED_DIALOG_EFFECTS)
+    ElseIf UBound(MapData(tileX, tileY).DialogEffects) < MAX_STACKED_DIALOG_EFFECTS Then
+        ReDim Preserve MapData(tileX, tileY).DialogEffects(1 To MAX_STACKED_DIALOG_EFFECTS)
+    End If
+    ' Libera los vencidos, cuenta los activos y ubica el más viejo
+    For effectIndex = 1 To UBound(MapData(tileX, tileY).DialogEffects)
+        With MapData(tileX, tileY).DialogEffects(effectIndex)
+            If LenB(.text) <> 0 Then
+                If FrameTime - .start > .duration Then
+                    .text = vbNullString
+                End If
+            End If
+            If LenB(.text) = 0 Then
+                If freeIndex = 0 Then freeIndex = effectIndex
+            Else
+                activeCount = activeCount + 1
+                If oldestIndex = 0 Then
+                    oldestIndex = effectIndex
+                ElseIf .start < MapData(tileX, tileY).DialogEffects(oldestIndex).start Then
+                    oldestIndex = effectIndex
+                End If
+            End If
+        End With
+    Next effectIndex
+    ' Si ya está lleno, se descarta el de arriba (el más viejo)
+    If activeCount >= MAX_STACKED_DIALOG_EFFECTS Then
+        MapData(tileX, tileY).DialogEffects(oldestIndex).text = vbNullString
+        freeIndex = oldestIndex
+    End If
+    ' Los que siguen activos suben un renglón
+    For effectIndex = 1 To UBound(MapData(tileX, tileY).DialogEffects)
+        With MapData(tileX, tileY).DialogEffects(effectIndex)
+            If LenB(.text) <> 0 Then
+                .offset.y = .offset.y - DIALOG_EFFECT_LINE_HEIGHT
+            End If
+        End With
+    Next effectIndex
+    ' El nuevo entra abajo, sobre el cuerpo
+    With MapData(tileX, tileY).DialogEffects(freeIndex)
+        .color = RGBA_From_vbColor(color)
+        .start = FrameTime
+        .text = text
+        .offset.x = OffsetX
+        .offset.y = OffsetY
+        .slideY = OffsetY
+        .duration = duration
+        .Animated = Animated
+    End With
+    Exit Sub
+AddStackedDialogEffect_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TileEngine_Chars.AddStackedDialogEffect", Erl)
 End Sub
 
 Public Function Get_PixelY_Of_Char(ByVal char_index As Integer) As Integer

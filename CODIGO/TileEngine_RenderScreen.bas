@@ -474,12 +474,16 @@ Sub RenderScreen(ByVal center_x As Integer, _
                                     Else
                                         Call RGBAList(TempColor, .color.R, .color.G, .color.B, .color.A)
                                     End If
+                                    If .slideY > .offset.y Then
+                                        .slideY = .slideY - DIALOG_EFFECT_SLIDE_SPEED * timerTicksPerFrame
+                                        If .slideY < .offset.y Then .slideY = .offset.y
+                                    End If
                                     If .Animated Then
                                         Engine_Text_Render_Efect 0, .text, screenX + 16 - Int(Engine_Text_Width(.text, False) * 0.5) + .offset.x, screenY - Engine_Text_Height( _
-                                                .text, False) + .offset.y - DialogTime * 0.025, TempColor, 1, False
+                                                .text, False) + .slideY - DialogTime * 0.025, TempColor, 1, False
                                     Else
                                         Engine_Text_Render_Efect 0, .text, screenX + 16 - Int(Engine_Text_Width(.text, False) * 0.5) + .offset.x, screenY - Engine_Text_Height( _
-                                                .text, False) + .offset.y, TempColor, 1, False
+                                                .text, False) + .slideY, TempColor, 1, False
                                     End If
                                 End If
                             End If

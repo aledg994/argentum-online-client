@@ -1779,31 +1779,11 @@ Private Sub HandleTextOverTile()
     OffsetY = Reader.ReadInt16()
     Animated = Reader.ReadBool()
     If InMapBounds(x, y) Then
-        With MapData(x, y)
-            Dim Index As Integer
-            If UBound(.DialogEffects) = 0 Then
-                ReDim .DialogEffects(1 To 1)
-                Index = 1
-            Else
-                For Index = 1 To UBound(.DialogEffects)
-                    If .DialogEffects(Index).text = vbNullString Then
-                        Exit For
-                    End If
-                Next
-                If Index > UBound(.DialogEffects) Then
-                    ReDim Preserve .DialogEffects(1 To UBound(.DialogEffects) + 1)
-                End If
-            End If
-            With .DialogEffects(Index)
-                .color = RGBA_From_vbColor(color)
-                .start = FrameTime
-                .text = text
-                .offset.x = 0
-                .offset.y = OffsetY
-                .duration = duration
-                .Animated = Animated
-            End With
-        End With
+        If MapData(x, y).charindex <> 0 Then
+            Call SetCharacterDialogFx(MapData(x, y).charindex, text, RGBA_From_vbColor(color))
+        Else
+            Call AddStackedDialogEffect(x, y, text, color, duration, 0, OffsetY, Animated)
+        End If
     End If
     Exit Sub
 errhandler:
@@ -1823,40 +1803,7 @@ Private Sub HandleTextCharDrop()
     duration = Reader.ReadInt16()
     Animated = Reader.ReadBool()
     If charindex = 0 Then Exit Sub
-    Dim x As Integer, y As Integer, OffsetX As Integer, OffsetY As Integer
-    With charlist(charindex)
-        x = .Pos.x
-        y = .Pos.y
-        OffsetX = .MoveOffsetX + .Body.HeadOffset.x
-        OffsetY = .MoveOffsetY + .Body.HeadOffset.y
-    End With
-    If InMapBounds(x, y) Then
-        With MapData(x, y)
-            Dim Index As Integer
-            If UBound(.DialogEffects) = 0 Then
-                ReDim .DialogEffects(1 To 1)
-                Index = 1
-            Else
-                For Index = 1 To UBound(.DialogEffects)
-                    If .DialogEffects(Index).text = vbNullString Then
-                        Exit For
-                    End If
-                Next
-                If Index > UBound(.DialogEffects) Then
-                    ReDim .DialogEffects(1 To UBound(.DialogEffects) + 1)
-                End If
-            End If
-            With .DialogEffects(Index)
-                .color = RGBA_From_vbColor(color)
-                .start = FrameTime
-                .text = text
-                .offset.x = OffsetX
-                .offset.y = OffsetY
-                .duration = duration
-                .Animated = Animated
-            End With
-        End With
-    End If
+    Call SetCharacterDialogFx(charindex, text, RGBA_From_vbColor(color))
     Exit Sub
 errhandler:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleTextCharDrop", Erl)
