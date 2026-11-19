@@ -1313,8 +1313,12 @@ Sub Char_TextRender(ByVal charindex As Integer, ByVal PixelOffsetX As Integer, B
                             Else
                                 Call RGBAList(temp_array, .color.r, .color.G, .color.b, .color.a)
                             End If
+                            If .slideY > .offset.y Then
+                                .slideY = .slideY - DIALOG_EFFECT_SLIDE_SPEED * timerTicksPerFrame
+                                If .slideY < .offset.y Then .slideY = .offset.y
+                            End If
                             Engine_Text_Render_Efect charindex, .text, PixelOffsetX + 14 - Int(Engine_Text_Width(.text, True) * 0.5), PixelOffsetY + charlist( _
-                                    charindex).Body.HeadOffset.y - Engine_Text_Height(.text, True) - DeltaTime * 0.025, temp_array, 1, True
+                                    charindex).Body.HeadOffset.y - Engine_Text_Height(.text, True) - DeltaTime * 0.025 + .slideY, temp_array, 1, True
                         End If
                     End If
                 End With
