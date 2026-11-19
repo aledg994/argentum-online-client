@@ -39,7 +39,7 @@ Begin VB.Form frmComerciar
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   3660
-      Left            =   600
+      Left            =   630
       MousePointer    =   99  'Custom
       ScaleHeight     =   244
       ScaleMode       =   3  'Pixel

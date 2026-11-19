@@ -17,44 +17,37 @@ Begin VB.Form FrmQuests
    ScaleWidth      =   12255
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin RichTextLib.RichTextBox txtQuestDescription 
+      Height          =   3255
+      Left            =   3840
+      TabIndex        =   11
+      Top             =   2130
+      Width           =   3260
+      _ExtentX        =   5741
+      _ExtentY        =   5741
+      _Version        =   393217
+      BorderStyle     =   0
+      Enabled         =   -1  'True
+      ReadOnly        =   -1  'True
+      ScrollBars      =   2
+      Appearance      =   0
+      TextRTF         =   $"FrmQuest.frx":0000
+   End
    Begin RichTextLib.RichTextBox txtInfoQuest 
       Height          =   1575
       Left            =   435
-      TabIndex        =   11
+      TabIndex        =   10
       Top             =   3840
       Width           =   3180
       _ExtentX        =   5609
       _ExtentY        =   2778
       _Version        =   393217
       BorderStyle     =   0
+      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
-      TextRTF         =   $"FrmQuest.frx":0000
-   End
-   Begin VB.TextBox detalle 
-      Alignment       =   2  'Center
-      Appearance      =   0  'Flat
-      BackColor       =   &H00000000&
-      BorderStyle     =   0  'None
-      Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   3255
-      Left            =   3880
-      LinkItem        =   "detalle"
-      MultiLine       =   -1  'True
-      TabIndex        =   8
-      Top             =   2130
-      Width           =   3260
+      TextRTF         =   $"FrmQuest.frx":0082
    End
    Begin VB.PictureBox PlayerView 
       Appearance      =   0  'Flat
@@ -169,7 +162,7 @@ Begin VB.Form FrmQuests
          Text            =   "Tipo"
          Object.Width           =   0
       EndProperty
-      Picture         =   "FrmQuest.frx":0082
+      Picture         =   "FrmQuest.frx":0104
    End
    Begin MSComctlLib.ListView ListView2 
       Height          =   2205
@@ -222,7 +215,7 @@ Begin VB.Form FrmQuests
          Text            =   "Tipo"
          Object.Width           =   0
       EndProperty
-      Picture         =   "FrmQuest.frx":CF8C
+      Picture         =   "FrmQuest.frx":D00E
    End
    Begin VB.Label lblRepetible 
       Alignment       =   2  'Center
@@ -240,7 +233,7 @@ Begin VB.Form FrmQuests
       ForeColor       =   &H00C0C0C0&
       Height          =   255
       Left            =   4880
-      TabIndex        =   10
+      TabIndex        =   9
       Top             =   1870
       Visible         =   0   'False
       Width           =   1455
@@ -262,7 +255,7 @@ Begin VB.Form FrmQuests
       ForeColor       =   &H00FFFFFF&
       Height          =   435
       Left            =   9960
-      TabIndex        =   9
+      TabIndex        =   8
       Top             =   2520
       Width           =   1695
    End
@@ -349,7 +342,7 @@ Attribute VB_Exposed = False
 '
 Private Sub Form_Load()
     On Error GoTo Form_Load_Err
-    detalle.BackColor = RGB(11, 11, 11)
+    txtQuestDescription.BackColor = RGB(11, 11, 11)
     PlayerView.BackColor = RGB(11, 11, 11)
     picture1.BackColor = RGB(19, 14, 11)
     Me.Picture = LoadInterface("ventanadetallemision.bmp")
@@ -443,7 +436,7 @@ Private Sub Image1_MouseUp(Button As Integer, Shift As Integer, x As Single, y A
         Case vbYes  'Boton Si.
             'Enviamos el paquete para abandonar la quest
             Call WriteQuestAbandon(lstQuests.ListIndex + 1)
-            detalle.text = ""
+            txtQuestDescription.Text = ""
             titulo.Caption = ""
             picture1.Refresh
             PlayerView.Refresh
@@ -502,22 +495,28 @@ Public Sub ListView2_Click()
 
     If ListView2.SelectedItem Is Nothing Then Exit Sub
 
-    Dim typeReward As String
-    Dim idx As Integer
-    Dim cant As Integer
+    Dim typeReward   As String
+    Dim idx          As Integer
+    Dim quantityText As String
 
-    typeReward = ListView2.SelectedItem.SubItems(4)
-    idx = CInt(ListView2.SelectedItem.SubItems(2))
-    cant = CInt(ListView2.SelectedItem.SubItems(1))
+    typeReward = ListView2.SelectedItem.SubItems(REWARD_LISTVIEW_COL_TYPE)
+    idx = ParseIntegerOrDefault(ListView2.SelectedItem.SubItems(REWARD_LISTVIEW_COL_INDEX), INVALID_REWARD_VALUE)
+    quantityText = ListView2.SelectedItem.SubItems(REWARD_LISTVIEW_COL_QUANTITY)
 
     picture1.visible = True
 
-    If typeReward = "typeObj" Then
-        Call Grh_Render_To_Hdc(picture1, ObjData(idx).GrhIndex, 0, 0, False, RGB(11, 11, 11))
-        objetolbl.Caption = ObjData(idx).Name & vbCrLf & "(" & cant & ")"
-    ElseIf typeReward = "typeSpell" Then
-        Call Grh_Render_To_Hdc(picture1, HechizoData(idx).IconoIndex, 0, 0, False, RGB(11, 11, 11))
-        objetolbl.Caption = HechizoData(idx).nombre & vbCrLf & "(" & cant & ")"
+    If idx = INVALID_REWARD_VALUE Then Exit Sub
+
+    If typeReward = "typeSpell" Then
+        If idx < LBound(HechizoData) Or idx > UBound(HechizoData) Then Exit Sub
+
+        Call Grh_Render_To_Hdc(picture1, HechizoData(idx).IconoIndex, 0, 0, False, RGB(19, 14, 11))
+        objetolbl.Caption = HechizoData(idx).nombre & vbCrLf & "(" & quantityText & ")"
+    Else
+        If idx < LBound(ObjData) Or idx > UBound(ObjData) Then Exit Sub
+
+        Call Grh_Render_To_Hdc(picture1, ObjData(idx).grhIndex, 0, 0, False, RGB(19, 14, 11))
+        objetolbl.Caption = ObjData(idx).name & vbCrLf & "(" & quantityText & ")"
     End If
 
     Exit Sub
