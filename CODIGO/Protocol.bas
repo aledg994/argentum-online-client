@@ -5104,6 +5104,7 @@ Private Sub HandleQuestDetails()
     Dim TalkToNpc As Integer
     Dim DeliverMap As Integer
     Dim DeliverText As String
+    Dim QuestDetail As String
     FrmQuests.ListView2.ListItems.Clear
     FrmQuests.ListView1.ListItems.Clear
     FrmQuests.ListView1.ColumnHeaders(2).Width = 780 'Agrando el ancho de la columna para que entre la cantidad de npcs correctamente
@@ -5114,6 +5115,7 @@ Private Sub HandleQuestDetails()
     FrmQuests.npclbl.Caption = ""
     FrmQuests.objetolbl.Caption = ""
     FrmQuests.txtInfoQuest.Text = ""
+    FrmQuests.txtQuestDescription.Text = ""
     requirements = ""
     
     QuestIndex = Reader.ReadInt16
@@ -5129,7 +5131,12 @@ Private Sub HandleQuestDetails()
         Next i
     End If
     RequiredQuest = Reader.ReadInt16
-    FrmQuests.detalle.Text = GetQuestDescForUI(questIndex)
+    
+    QuestDetail = GetQuestDescForUI(questIndex)
+    If LenB(QuestDetail) > 0 Then
+        Call AddtoRichTextBox2(FrmQuests.txtQuestDescription, QuestDetail, 128, 128, 128, False, False, True, rtfCenter)
+    End If
+    
     Call PlayQuestDescAudio(questIndex)
     If RequiredLevel > 1 Then
         requirements = requirements & JsonLanguage.Item("MENSAJE_QUEST_NIVEL_REQUERIDO") & RequiredLevel & vbCrLf
@@ -5205,6 +5212,7 @@ Private Sub HandleQuestDetails()
         subelemento.SubItems(1) = BeautifyBigNumber(tmplong)
         subelemento.SubItems(2) = 12
         subelemento.SubItems(3) = 0
+        subelemento.SubItems(4) = "typeObj"
     End If
     tmplong = Reader.ReadInt32
     If tmplong <> 0 Then
@@ -5212,6 +5220,7 @@ Private Sub HandleQuestDetails()
         subelemento.SubItems(1) = BeautifyBigNumber(tmplong)
         subelemento.SubItems(2) = 608
         subelemento.SubItems(3) = 1
+        subelemento.SubItems(4) = "typeObj"
     End If
     tmpByte = Reader.ReadInt8 'reward objs
     If tmpByte Then
@@ -5249,7 +5258,7 @@ Private Sub HandleQuestDetails()
     requirements = DeliverText & requirements
 
     If LenB(requirements) > 0 Then
-        Call AddtoRichTextBox(FrmQuests.txtInfoQuest, requirements, 128, 128, 128)
+        Call AddtoRichTextBox2(FrmQuests.txtInfoQuest, requirements, 240, 240, 240)
     End If
         
     FrmQuests.txtInfo.Text = tmpStr

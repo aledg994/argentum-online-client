@@ -456,6 +456,10 @@ Public Type t_IndexHeap
     IndexInfo() As Integer
 End Type
 
+Public Const REWARD_LISTVIEW_COL_QUANTITY As Integer = 1
+Public Const REWARD_LISTVIEW_COL_INDEX    As Integer = 2
+Public Const REWARD_LISTVIEW_COL_TYPE     As Integer = 4
+Public Const INVALID_REWARD_VALUE         As Integer = -1
 Public Const InitialProjectileSize          As Integer = 45
 Public AllProjectile(InitialProjectileSize) As Projectile
 Public AvailableProjectile                  As t_IndexHeap
@@ -2135,3 +2139,19 @@ Public Sub PlayQuestFinalDescAudio(ByVal questIndex As Integer)
 
     Call ao20audio.PlayWav(audioFile, False, 0, 0, QUEST_DESC_AUDIO_LABEL)
 End Sub
+
+Public Function ParseIntegerOrDefault(ByVal textValue As String, ByVal defaultValue As Integer) As Integer
+    On Error GoTo ParseIntegerOrDefault_Err
+
+    If Not IsNumeric(textValue) Then
+        ParseIntegerOrDefault = defaultValue
+        Exit Function
+    End If
+
+    ParseIntegerOrDefault = CInt(textValue)
+
+    Exit Function
+
+ParseIntegerOrDefault_Err:
+    ParseIntegerOrDefault = defaultValue
+End Function
