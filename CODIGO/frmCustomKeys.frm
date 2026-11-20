@@ -1540,6 +1540,20 @@ txConfig_KeyUp_Err:
     Resume Next
 End Sub
 
+Private Sub txConfig_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+    On Error GoTo txConfig_MouseDown_Err
+
+    If Button <> vbRightButton Then Exit Sub
+
+    Call Change_TempKey(Index, KEY_UNASSIGNED, vbNullString)
+
+    Exit Sub
+
+txConfig_MouseDown_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCustomKeys.txConfig_MouseDown", Erl)
+    Resume Next
+End Sub
+
 Sub Change_TempKey(Index As Integer, KeyCode As Integer, Name As String)
     On Error GoTo Change_TempKey_Err
     TempVars(Index) = KeyCode
