@@ -37,6 +37,7 @@ Public BindKeys()       As tBindedKey
 Public BotonElegido     As Integer
 Public MacroTipoElegido As Byte
 Public Const HOTKEY_LABEL_MAX_CHARS As Integer = 4
+Public Const KEY_UNASSIGNED         As Integer = 0
 Private Const HOTKEY_LABEL_DELETE   As String = "Supr"
 Private Const HOTKEY_LABEL_INSERT   As String = "Ins"
 Private Const HOTKEY_LABEL_HOME     As String = "Ini"
