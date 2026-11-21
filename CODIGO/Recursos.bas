@@ -1742,6 +1742,8 @@ Sub CargarCuerpos()
         BodyKey = "BODY" & i
         Std = val(Loader.GetValue(BodyKey, "Std"))
         With BodyData(i)
+            .StepSound1 = val(Loader.GetValue(BodyKey, "StepSound1"))
+            .StepSound2 = val(Loader.GetValue(BodyKey, "StepSound2"))
             .BodyOffset.x = val(Loader.GetValue(BodyKey, "BodyOffsetX"))
             .BodyOffset.y = val(Loader.GetValue(BodyKey, "BodyOffsetY"))
             .HeadOffset.x = val(Loader.GetValue(BodyKey, "HeadOffsetX")) + .BodyOffset.x
