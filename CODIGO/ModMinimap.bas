@@ -1,14 +1,18 @@
 Attribute VB_Name = "ModMinimap"
 Option Explicit
 
-' DirectX-rendered dot per slot (0=player, 1-5=allies) used when CenteredMinimap <> 0
+' Ultimo indice de punto del minimapa: 0 = jugador, 1 a MAX_MINIMAP_DOTS = companeros de grupo
+Public Const MAX_MINIMAP_DOTS As Integer = 6
+
+' DirectX-rendered dot per slot (0=player, 1-6=allies) used when CenteredMinimap <> 0
 Public Type MinimapDotState
     visible  As Boolean
     screenX  As Long
     screenY  As Long
     dotColor(0 To 3) As RGBA
 End Type
-Public MinimapDots(0 To 5) As MinimapDotState
+
+Public MinimapDots(0 To MAX_MINIMAP_DOTS) As MinimapDotState
 
 Public Sub DrawCenteredMinimap()
     Call RenderMinimapCentered(UserMap, UserPos.x, UserPos.y, CenteredMinimapZoom, CenteredMinimapZoom)
@@ -202,7 +206,7 @@ Public Sub RenderMinimapDots()
     squareSize = 6  ' Size of each square in pixels (adjust as needed)
     
     ' Loop through all minimap dots
-    For i = 0 To 5
+    For i = 0 To MAX_MINIMAP_DOTS
         If MinimapDots(i).visible Then
             Dim Col As RGBA
             ' Draw the square using the dot's position and color
@@ -254,4 +258,9 @@ Public Sub InitMinimapDotColors()
     SetRGBA MinimapDots(5).dotColor(1), 0, 0, 255
     SetRGBA MinimapDots(5).dotColor(2), 0, 0, 255
     SetRGBA MinimapDots(5).dotColor(3), 255, 255, 0
+    
+    SetRGBA MinimapDots(6).dotColor(0), 0, 255, 255      ' ally 6  : cyan
+    SetRGBA MinimapDots(6).dotColor(1), 0, 255, 255
+    SetRGBA MinimapDots(6).dotColor(2), 0, 255, 255
+    SetRGBA MinimapDots(6).dotColor(3), 0, 255, 255
 End Sub

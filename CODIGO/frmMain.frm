@@ -984,6 +984,19 @@ Begin VB.Form frmMain
       Top             =   2250
       Width           =   11040
    End
+   Begin VB.Shape personaje 
+      BackColor       =   &H00FFFF00&
+      BorderColor     =   &H00FFFF00&
+      FillColor       =   &H00FFFF00&
+      FillStyle       =   0  'Solid
+      Height          =   60
+      Index           =   6
+      Left            =   0
+      Shape           =   3  'Circle
+      Top             =   0
+      Visible         =   0   'False
+      Width           =   150
+   End
    Begin VB.Image btnZoomIn 
       Height          =   195
       Left            =   11175
@@ -4099,6 +4112,17 @@ End Sub
 Public Sub HideMinimapDot(ByVal Jugador As Integer)
     personaje(Jugador).visible = False
     MinimapDots(Jugador).visible = False
+End Sub
+
+Public Sub HideAllAllyMinimapDots()
+    On Error GoTo HideAllAllyMinimapDots_Err
+    Dim dotIndex As Integer
+    For dotIndex = 1 To MAX_MINIMAP_DOTS
+        Call HideMinimapDot(dotIndex)
+    Next dotIndex
+    Exit Sub
+HideAllAllyMinimapDots_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmMain.HideAllAllyMinimapDots", Erl)
 End Sub
 
 Private Sub imgDeleteItem_Click()
