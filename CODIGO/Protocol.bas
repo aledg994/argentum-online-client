@@ -730,11 +730,7 @@ Public Sub HandleDisconnect()
     EntradaX = 1
     Call EraseChar(UserCharIndex, True)
     Call SwitchMap(UserMap)
-    frmMain.HideMinimapDot 1
-    frmMain.HideMinimapDot 2
-    frmMain.HideMinimapDot 3
-    frmMain.HideMinimapDot 4
-    frmMain.HideMinimapDot 5
+    Call frmMain.HideAllAllyMinimapDots
     UserStats.Clase = 0
     UserStats.Sexo = 0
     UserStats.Raza = 0
@@ -2132,11 +2128,7 @@ Private Sub HandleMostrarCuenta()
         For i = 1 To LastChar
             Call EraseChar(i)
         Next i
-        frmMain.HideMinimapDot 1
-        frmMain.HideMinimapDot 2
-        frmMain.HideMinimapDot 3
-        frmMain.HideMinimapDot 4
-        frmMain.HideMinimapDot 5
+        Call frmMain.HideAllAllyMinimapDots
     End If
     Exit Sub
 errhandler:

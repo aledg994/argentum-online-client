@@ -356,11 +356,7 @@ Public Sub LoadCharacterSelectionScreen()
         For i = 1 To LastChar
             Call EraseChar(i)
         Next i
-        frmMain.HideMinimapDot 1
-        frmMain.HideMinimapDot 2
-        frmMain.HideMinimapDot 3
-        frmMain.HideMinimapDot 4
-        frmMain.HideMinimapDot 5
+        Call frmMain.HideAllAllyMinimapDots
     End If
 End Sub
 
