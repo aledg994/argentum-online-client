@@ -134,6 +134,8 @@ Public Type BodyData
     BodyIndex As Integer
     IdleBody As Integer
     AnimateOnIdle As Integer
+    StepSound1 As Integer
+    StepSound2 As Integer
 End Type
 
 'Lista de cabezas
@@ -639,16 +641,14 @@ Sub DoPasosFx(ByVal charindex As Integer)
             ElseIf MapData(.Pos.x, .Pos.y).Graphic(1).GrhIndex > 0 Then
                 Dim FileNum As Long: FileNum = GrhData(MapData(.Pos.x, .Pos.y).Graphic(1).GrhIndex).FileNum
                 TerrenoDePaso = GetTerrenoDePaso(FileNum, GetWalkableOverlayGraphic(.Pos.x, .Pos.y))
-                If .Speeding > 1.2 And TerrenoDePaso = CONST_PISO Then
-                    TerrenoDePaso = CONST_CABALLO
-                End If
             Else
                 TerrenoDePaso = CONST_PISO
             End If
-            Dim SndIndex As Integer: SndIndex = Pasos(TerrenoDePaso).wav(StepIndex)
+            Dim SndIndex As Integer: SndIndex = GetBodyStepSound(.Body, stepIndex)
+            If SndIndex = 0 Then SndIndex = Pasos(TerrenoDePaso).wav(stepIndex)
             Dim SndLabel As String: SndLabel = "pasos" & charindex & "_" & StepIndex
             Call ao20audio.StopWav(SndIndex, SndLabel)
-            Call ao20audio.PlayFx(Pasos(TerrenoDePaso).wav(StepIndex), False, steps_vol, steps_pan, "pasos" & charindex & "_" & StepIndex, eFxSteps)
+            Call ao20audio.PlayFx(SndIndex, False, steps_vol, steps_pan, SndLabel, eFxSteps)
         End If
     End With
     Exit Sub
@@ -656,6 +656,18 @@ DoPasosFx_Err:
     Call RegistrarError(Err.Number, Err.Description, "TileEngine.DoPasosFx", Erl)
     Resume Next
 End Sub
+
+Public Function GetBodyStepSound(ByRef bodyInfo As BodyData, ByVal stepIndex As Byte) As Integer
+    On Error GoTo GetBodyStepSound_Err
+    If stepIndex = 2 And bodyInfo.StepSound2 > 0 Then
+        GetBodyStepSound = bodyInfo.StepSound2
+    Else
+        GetBodyStepSound = bodyInfo.StepSound1
+    End If
+    Exit Function
+GetBodyStepSound_Err:
+    Call RegistrarError(Err.Number, Err.Description, "TileEngine.GetBodyStepSound", Erl)
+End Function
 
 Sub DoPasosInvi(ByVal Grh As Long, ByVal Grh2 As Long, ByVal distancia As Byte, ByVal balance As Integer, ByVal step As Boolean)
     On Error GoTo DoPasosInvi_Err
