@@ -33,6 +33,15 @@ Public NightIndex     As Integer
 Public MorningIndex   As Integer
 Public MeteoParticle  As Integer
 
+
+Public Enum e_WeatherEffect
+    e_WeatherNone = 0
+    e_WeatherRain = 1
+    e_WeatherSnow = 2
+End Enum
+
+Private m_CurrentWeatherEffect As e_WeatherEffect
+
 Public Sub CargarLucesGlobales()
     On Error GoTo CargarLucesGlobales_Err
     selected_light = GetSetting("VIDEO", "LuzGlobal")
@@ -226,3 +235,75 @@ EsNoche_Err:
     Call RegistrarError(Err.Number, Err.Description, "ModMetereologia.EsNoche", Erl)
     Resume Next
 End Function
+
+Private Function GetDesiredWeatherEffect() As e_WeatherEffect
+    On Error GoTo GetDesiredWeatherEffect_Err
+    ' Si el mapa tiene ambos flags y ambos estan activos, gana la nieve
+    If bNieve And MapDat.NIEVE = 1 Then
+        GetDesiredWeatherEffect = e_WeatherSnow
+    ElseIf bRain And MapDat.LLUVIA = 1 Then
+        GetDesiredWeatherEffect = e_WeatherRain
+    Else
+        GetDesiredWeatherEffect = e_WeatherNone
+    End If
+    Exit Function
+GetDesiredWeatherEffect_Err:
+    Call RegistrarError(Err.Number, Err.Description, "ModMetereologia.GetDesiredWeatherEffect", Erl)
+End Function
+
+Public Function GetCurrentWeatherEffect() As e_WeatherEffect
+    GetCurrentWeatherEffect = m_CurrentWeatherEffect
+End Function
+
+Public Sub PlayWeatherLoopAudio(ByVal weatherEffect As e_WeatherEffect)
+    On Error GoTo PlayWeatherLoopAudio_Err
+    Select Case weatherEffect
+        Case e_WeatherRain
+            Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_RAIN_IN_LOOP, SND_RAIN_OUT_LOOP))
+        Case e_WeatherSnow
+            Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_NIEVEIN, SND_NIEVEOUT))
+    End Select
+    Exit Sub
+PlayWeatherLoopAudio_Err:
+    Call RegistrarError(Err.Number, Err.Description, "ModMetereologia.PlayWeatherLoopAudio", Erl)
+End Sub
+
+Public Sub RefreshWeatherEffects(ByVal isMapChange As Boolean)
+    On Error GoTo RefreshWeatherEffects_Err
+    Dim desiredEffect As e_WeatherEffect
+    desiredEffect = GetDesiredWeatherEffect()
+    If desiredEffect = m_CurrentWeatherEffect And Not isMapChange Then Exit Sub
+    ' Particula: al cambiar de mapa se recrea ya cayendo; al empezar a llover arranca desde arriba
+    Select Case desiredEffect
+        Case e_WeatherSnow
+            Call Graficos_Particulas.Engine_MeteoParticle_Set(Particula_Nieve, isMapChange)
+        Case e_WeatherRain
+            Call Graficos_Particulas.Engine_MeteoParticle_Set(Particula_Lluvia, isMapChange)
+        Case Else
+            If MeteoParticle <> 0 Then Call Graficos_Particulas.Engine_MeteoParticle_Set(-1, True)
+    End Select
+    ' Audio: solo si cambio el efecto
+    If desiredEffect <> m_CurrentWeatherEffect Then
+        If desiredEffect = e_WeatherNone Then
+            If Not isMapChange Then
+                Call ao20audio.PlayAmbientAudio(UserMap)
+                Call ao20audio.PlayAmbientWav(IIf(bTecho, SND_RAIN_IN_END, SND_RAIN_OUT_END))
+            End If
+        Else
+            Call PlayWeatherLoopAudio(desiredEffect)
+        End If
+    End If
+    m_CurrentWeatherEffect = desiredEffect
+    Exit Sub
+RefreshWeatherEffects_Err:
+    Call RegistrarError(Err.Number, Err.Description, "ModMetereologia.RefreshWeatherEffects", Erl)
+End Sub
+
+Public Sub ResetWeatherEffects()
+    On Error GoTo ResetWeatherEffects_Err
+    If MeteoParticle <> 0 Then Call Graficos_Particulas.Engine_MeteoParticle_Set(-1, True)
+    m_CurrentWeatherEffect = e_WeatherNone
+    Exit Sub
+ResetWeatherEffects_Err:
+    Call RegistrarError(Err.Number, Err.Description, "ModMetereologia.ResetWeatherEffects", Erl)
+End Sub

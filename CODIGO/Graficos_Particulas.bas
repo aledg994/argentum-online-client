@@ -767,6 +767,7 @@ Public Sub Engine_MeteoParticle_Set(ByVal meteo_part As Long, Optional ByVal alr
     On Error GoTo Engine_MeteoParticle_Set_Err
     If (meteo_part = -1) And (MeteoParticle <> 0) Then
         Call Particle_Group_Remove(MeteoParticle)
+        MeteoParticle = 0
     ElseIf (meteo_part <> -1) Then
         If MeteoParticle <> 0 Then Call Particle_Group_Remove(MeteoParticle)
         MeteoParticle = General_Particle_Create(meteo_part, -1, -1)
