@@ -480,19 +480,26 @@ Option Explicit
 Private PocionesRojas As Boolean
 Private CaenItems     As Boolean
 Private Const MAX_JUGADORES = 5
+' Debe coincidir con ApuestaMaxima de Retos.dat en el servidor (el servidor es el que valida)
+Private Const APUESTA_MAXIMA   As Long = 1000000
+' El servidor lee la cantidad de pociones como Int16
+Private Const POCIONES_MAXIMAS As Long = 32767
 
 Private Sub Apuesta_Change()
-    Dim Sel As Integer
-    Sel = Apuesta.SelStart
-    Dim NewVal As Long
-    NewVal = CLng(Abs(val(Apuesta.text)))
-    If NewVal > 100000000 Then
-        NewVal = 10000000
-    ElseIf NewVal < 0 Then
-        NewVal = 0
+    On Error GoTo Apuesta_Change_Err
+    Dim cursorPosition As Integer
+    Dim inputAmount    As Double
+    cursorPosition = Apuesta.SelStart
+    ' Double para que un número enorme no desborde antes de recortarlo
+    inputAmount = Abs(val(Apuesta.Text))
+    If inputAmount > APUESTA_MAXIMA Then
+        inputAmount = APUESTA_MAXIMA
     End If
-    Apuesta.text = NewVal
-    Apuesta.SelStart = Sel
+    Apuesta.Text = CLng(inputAmount)
+    Apuesta.SelStart = cursorPosition
+    Exit Sub
+Apuesta_Change_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmRetos.Apuesta_Change", Erl)
 End Sub
 
 Private Sub Cerrar_Click()
@@ -674,9 +681,13 @@ Private Function Validar() As Boolean
             End If
         Next
     Next
+    If val(Apuesta.Text) > APUESTA_MAXIMA Then
+        Error.Caption = JsonLanguage.Item("CHALLENGE_ERROR_TOO_MUCH_GOLD")
+        Exit Function
+    End If
     If PocionesRojas Then
-        If val(txtPociones.text) < 0 Or val(txtPociones.text) > 10000000 Then
-            Error.Caption = JsonLanguage.Item("CHALLENGE_ERROR_TOO_MUCH_GOLD")
+        If val(txtPociones.Text) < 0 Or val(txtPociones.Text) > POCIONES_MAXIMAS Then
+            Error.Caption = JsonLanguage.Item("CHALLENGE_ERROR_TOO_MANY_POTIONS")
             Exit Function
         End If
     End If
