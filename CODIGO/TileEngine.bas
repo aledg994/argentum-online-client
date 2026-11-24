@@ -1236,11 +1236,7 @@ Public Sub UpdatePlayerRoof()
     Dim WasUnderRoof As Boolean: WasUnderRoof = bTecho
     bTecho = HayTecho(UserPos.x, UserPos.y)
     If WasUnderRoof = bTecho Then Exit Sub
-    If bRain And MapDat.LLUVIA = 1 Then
-        Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_RAIN_IN_LOOP, SND_RAIN_OUT_LOOP))
-    ElseIf bNieve And MapDat.NIEVE = 1 Then
-        Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_NIEVEIN, SND_NIEVEOUT))
-    End If
+    Call PlayWeatherLoopAudio(GetCurrentWeatherEffect())
 End Sub
 
 Private Function SyncGrhPhase(ByRef Grh As Grh, ByVal newGrhIndex As Long) As Long

@@ -529,15 +529,14 @@ Sub RenderScreen(ByVal center_x As Integer, _
     Next y
     If MeteoParticle >= LBound(particle_group_list) And MeteoParticle <= UBound(particle_group_list) Then
         If particle_group_list(MeteoParticle).active Then
-            If MapDat.LLUVIA Then
+            If GetCurrentWeatherEffect() = e_WeatherRain Then
                 'Screen positions were hardcoded by now
                 screenX = 250
                 screenY = 0
                 Call Particle_Group_Render(MeteoParticle, screenX, screenY)
                 LastOffsetX = ParticleOffsetX
                 LastOffsetY = ParticleOffsetY
-            End If
-            If MapDat.NIEVE Then
+            ElseIf GetCurrentWeatherEffect() = e_WeatherSnow Then
                 If Graficos_Particulas.Engine_MeteoParticle_Get <> 0 Then
                     'Screen positions were hardcoded by now
                     screenX = 250 + gameplay_render_offset.x

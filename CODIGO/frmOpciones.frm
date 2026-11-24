@@ -1018,9 +1018,7 @@ Private Sub chkO_MouseUp(Index As Integer, Button As Integer, Shift As Integer, 
                 HScroll1.enabled = True
                 ao20audio.AmbientEnabled = 1
                 Call ao20audio.PlayAmbientAudio(UserMap)
-                If bRain Then
-                    Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_RAIN_IN_LOOP, SND_RAIN_OUT_LOOP))
-                End If
+                Call PlayWeatherLoopAudio(GetCurrentWeatherEffect())
             End If
             If ao20audio.AmbientEnabled = 0 Then
                 chko(3).Picture = Nothing

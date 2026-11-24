@@ -788,6 +788,7 @@ Public Sub HandleDisconnect()
     frmMain.TimerNiebla.enabled = False
     bNiebla = False
     bNieve = False
+    Call ResetWeatherEffects
     bFogata = False
     SkillPoints = 0
     UserStats.estado = 0
@@ -3097,15 +3098,7 @@ Private Sub HandleRainToggle()
     On Error GoTo HandleRainToggle_Err
     bRain = Reader.ReadBool
     If Not InMapBounds(UserPos.x, UserPos.y) Then Exit Sub
-    If MapDat.LLUVIA = 0 Then Exit Sub
-    If bRain Then
-        Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_RAIN_IN_LOOP, SND_RAIN_OUT_LOOP))
-        Call Graficos_Particulas.Engine_MeteoParticle_Set(Particula_Lluvia, False)
-    Else
-        Call ao20audio.PlayAmbientAudio(UserMap)
-        Call ao20audio.PlayAmbientWav(IIf(bTecho, SND_RAIN_IN_END, SND_RAIN_OUT_END))
-        Call Graficos_Particulas.Engine_MeteoParticle_Set(-1)
-    End If
+    Call RefreshWeatherEffects(False)
     Exit Sub
 HandleRainToggle_Err:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleRainToggle", Erl)
@@ -5011,15 +5004,7 @@ Private Sub HandleNieveToggle()
     On Error GoTo HandleNieveToggle_Err
     bNieve = Reader.ReadBool
     If Not InMapBounds(UserPos.x, UserPos.y) Then Exit Sub
-    If MapDat.NIEVE = 0 Then Exit Sub
-    If bNieve Then
-        Call ao20audio.PlayWeatherAudio(IIf(bTecho, SND_NIEVEIN, SND_NIEVEOUT))
-        Call Graficos_Particulas.Engine_MeteoParticle_Set(Particula_Nieve, False)
-    Else
-        Call ao20audio.PlayAmbientAudio(UserMap)
-        Call ao20audio.PlayAmbientWav(IIf(bTecho, SND_RAIN_IN_END, SND_RAIN_OUT_END))
-        Call Graficos_Particulas.Engine_MeteoParticle_Set(-1)
-    End If
+    Call RefreshWeatherEffects(False)
     Exit Sub
 HandleNieveToggle_Err:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleNieveToggle", Erl)
@@ -5029,7 +5014,7 @@ Private Sub HandleNieblaToggle()
     'Remove packet ID
     On Error GoTo HandleNieblaToggle_Err
     MaxAlphaNiebla = Reader.ReadInt8()
-    bNiebla = Not bNiebla
+    bNiebla = (MaxAlphaNiebla > 0)
     frmMain.TimerNiebla.enabled = True
     Exit Sub
 HandleNieblaToggle_Err:
