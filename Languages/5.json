@@ -789,5 +789,17 @@
   "LBL_TOGGLE_AUTO_COMBAT": "Combattimento automatico (NPC)",
   "MENSAJE_MAPA_ENTREGA": "Mappa di consegna: ",
   "MENSAJE_ENTREGAR_A": "Consegnare a: ",
-  "MENSAJE_AUTOCOMBATE_ACTIVO": "[COMBATTIMENTO AUTO ATTIVO]"
+  "MENSAJE_AUTOCOMBATE_ACTIVO": "[COMBATTIMENTO AUTO ATTIVO]",
+  	"FOGATA_BOTON_COCINAR": "Cucina",
+	"FOGATA_BOTON_APAGAR": "Spegni falò",
+	"FOGATA_BOTON_SALIR": "Esci",
+	"FOGATA_DURA": "Il falò dura ancora",
+	"FOGATA_MINUTOS": "min",
+	"FOGATA_PROXIMO_LISTO": "Prossimo pronto tra",
+	"FOGATA_TODO_LISTO": "Tutto pronto, ritira il tuo cibo",
+	"FOGATA_SIN_COCCION": "Deposita un alimento crudo e premi Cucina",
+	"FOGATA_CONFIRMAR_APAGAR": "Spegnere il falò? Ciò che sta cuocendo andrà perso.",
+	"FOGATA_CASILLERO_CARBON": "Carbone",
+	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
+	"FOGATA_CASILLERO_SALIDA": "Uscita"
 }

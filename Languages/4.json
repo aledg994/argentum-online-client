@@ -789,5 +789,17 @@
   "LBL_TOGGLE_AUTO_COMBAT": "Combat automatique (NPC)",
   "MENSAJE_MAPA_ENTREGA": "Carte de livraison : ",
   "MENSAJE_ENTREGAR_A": "Livrer à : ",
-  "MENSAJE_AUTOCOMBATE_ACTIVO": "[COMBAT AUTO ACTIF]"
+  "MENSAJE_AUTOCOMBATE_ACTIVO": "[COMBAT AUTO ACTIF]",
+  	"FOGATA_BOTON_COCINAR": "Cuisiner",
+	"FOGATA_BOTON_APAGAR": "Éteindre le feu",
+	"FOGATA_BOTON_SALIR": "Quitter",
+	"FOGATA_DURA": "Le feu dure encore",
+	"FOGATA_MINUTOS": "min",
+	"FOGATA_PROXIMO_LISTO": "Prochain prêt dans",
+	"FOGATA_TODO_LISTO": "Tout est prêt, récupère ta nourriture",
+	"FOGATA_SIN_COCCION": "Dépose un aliment cru et appuie sur Cuisiner",
+	"FOGATA_CONFIRMAR_APAGAR": "Éteindre le feu ? Ce qui est en train de cuire sera perdu.",
+	"FOGATA_CASILLERO_CARBON": "Charbon",
+	"FOGATA_CASILLERO_INGREDIENTE": "Ingrédient",
+	"FOGATA_CASILLERO_SALIDA": "Sortie"
 }

@@ -2080,6 +2080,8 @@ Public Sub start()
                         DrawInterfaceBovedaCuenta
                     ElseIf frmCrafteo.visible Then
                         DrawInterfaceCrafting
+                    ElseIf frmCampfire.visible Then
+                        Call DrawInterfaceCampfire
                     End If
                     If FrmKeyInv.visible Then
                         DrawInterfaceKeys
@@ -2575,6 +2577,35 @@ Public Sub DrawInterfaceCrafting()
 DrawInterfaceBoveda_Err:
     Call RegistrarError(Err.Number, Err.Description, "engine.DrawInterfaceCrafting", Erl)
     Resume Next
+End Sub
+
+Public Sub DrawInterfaceCampfire()
+    On Error GoTo DrawInterfaceCampfire_Err
+    If Not frmCampfire.InvCampfireUser.NeedsRedraw And Not frmCampfire.InvCampfireCoal.NeedsRedraw And Not frmCampfire.InvCampfireIngredient.NeedsRedraw _
+            And Not frmCampfire.InvCampfireOutput.NeedsRedraw Then Exit Sub
+    Dim InvRect As RECT
+    InvRect.Left = 0
+    InvRect.Top = 0
+    InvRect.Right = frmCampfire.interface.ScaleWidth
+    InvRect.Bottom = frmCampfire.interface.ScaleHeight
+    RenderCullingRect = InvRect
+    Call Engine_BeginScene
+    Call frmCampfire.InvCampfireUser.DrawInventory
+    Call frmCampfire.InvCampfireCoal.DrawInventory
+    Call frmCampfire.InvCampfireIngredient.DrawInventory
+    Call frmCampfire.InvCampfireOutput.DrawInventory
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_CARBON"), 116, 10, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), 30, 152, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), 150, 152, COLOR_WHITE)
+    Call frmCampfire.InvCampfireUser.DrawDraggedItem
+    Call frmCampfire.InvCampfireCoal.DrawDraggedItem
+    Call frmCampfire.InvCampfireIngredient.DrawDraggedItem
+    Call frmCampfire.InvCampfireOutput.DrawDraggedItem
+    Call Engine_EndScene(InvRect, frmCampfire.interface.hWnd)
+    RenderCullingRect = GameplayDrawAreaRect
+    Exit Sub
+DrawInterfaceCampfire_Err:
+    Call RegistrarError(Err.Number, Err.Description, "engine.DrawInterfaceCampfire", Erl)
 End Sub
 
 Public Sub Grh_Render_Advance(ByRef Grh As Grh, _
@@ -3259,6 +3290,15 @@ Public Sub InitializeInventory()
     Call frmCrafteo.InvCraftUser.Initialize(frmCrafteo.PicInven, MAX_INVENTORY_SLOTS, 210, , 250, 0, 3, 3, True)
     Call frmCrafteo.InvCraftItems.Initialize(frmCrafteo.PicInven, MAX_SLOTS_CRAFTEO, 175, , 25, 180, 3, 3, True)
     Call frmCrafteo.InvCraftCatalyst.Initialize(frmCrafteo.PicInven, 1, 35, 35, 100, 90, 3, 3, True)
+
+    Set frmCampfire.InvCampfireUser = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireCoal = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireIngredient = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireOutput = New clsGrapchicalInventory
+    Call frmCampfire.InvCampfireUser.Initialize(frmCampfire.interface, MAX_INVENTORY_SLOTS, 210, 0, 252, 0, 3, 3, True)
+    Call frmCampfire.InvCampfireCoal.Initialize(frmCampfire.interface, 1, 35, 35, 76, 0, 3, 3, True)
+    Call frmCampfire.InvCampfireIngredient.Initialize(frmCampfire.interface, 1, 35, 35, 38, 114, 3, 3, True)
+    Call frmCampfire.InvCampfireOutput.Initialize(frmCampfire.interface, 1, 35, 35, 152, 114, 3, 3, True)
 
     Call frmSkins.InvSkins.Initialize(frmSkins.interface, MAX_SKINSINVENTORY_SLOTS, 210, 0, 0, 0, 3, 3, False, , True)
 

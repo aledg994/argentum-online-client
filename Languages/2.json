@@ -789,5 +789,17 @@
 	"LBL_TOGGLE_AUTO_COMBAT": "Auto combat (NPC)",
 	"MENSAJE_MAPA_ENTREGA": "Delivery map: ",
 	"MENSAJE_ENTREGAR_A": "Deliver to: ",
-	"MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTO-COMBAT ON]"
+	"MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTO-COMBAT ON]",
+	"FOGATA_BOTON_COCINAR": "Cook",
+	"FOGATA_BOTON_APAGAR": "Put out",
+	"FOGATA_BOTON_SALIR": "Exit",
+	"FOGATA_DURA": "The campfire lasts",
+	"FOGATA_MINUTOS": "more min",
+	"FOGATA_PROXIMO_LISTO": "Next ready in",
+	"FOGATA_TODO_LISTO": "All done, collect your food",
+	"FOGATA_SIN_COCCION": "Drop raw food and press Cook",
+	"FOGATA_CONFIRMAR_APAGAR": "Put out the campfire? Anything cooking will be lost.",
+	"FOGATA_CASILLERO_CARBON": "Coal",
+	"FOGATA_CASILLERO_INGREDIENTE": "Ingredient",
+	"FOGATA_CASILLERO_SALIDA": "Output"
 }

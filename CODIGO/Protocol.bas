@@ -224,6 +224,10 @@ Public Function HandleIncomingData(ByVal message As Network.Reader) As Boolean
                 Call HandleCarpenterObjects
             Case ServerPacketID.eRestOK
                 Call HandleRestOK
+            Case ServerPacketID.eCampfireState
+                Call HandleCampfireState
+            Case ServerPacketID.eCampfireExtinguished
+                Call HandleCampfireExtinguished
             Case ServerPacketID.eErrorMsg
                 Call HandleErrorMessage
             Case ServerPacketID.eBlind
@@ -3509,6 +3513,9 @@ Private Sub HandleChangeInventorySlot()
         Call frmBancoCuenta.InvBankUsuCuenta.SetItem(Slot, ObjIndex, Amount, Equipped, GrhIndex, ObjType, MaxHit, MinHit, MinDef, value, Name, ElementalTags, podrausarlo)
     ElseIf frmCrafteo.visible Then
         Call frmCrafteo.InvCraftUser.SetItem(Slot, ObjIndex, Amount, Equipped, GrhIndex, ObjType, MaxHit, MinHit, MinDef, value, Name, ElementalTags, podrausarlo)
+    ElseIf frmCampfire.visible Then
+        Call frmCampfire.InvCampfireUser.SetItem(Slot, ObjIndex, Amount, Equipped, grhIndex, ObjType, MaxHit, MinHit, MinDef, value, name, ElementalTags, podrausarlo)
+        Call frmCampfire.RefreshPanel
     End If
     Exit Sub
 errhandler:
@@ -3782,6 +3789,49 @@ Private Sub HandleRestOK()
     Exit Sub
 HandleRestOK_Err:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleRestOK", Erl)
+End Sub
+
+Private Sub HandleCampfireState()
+    On Error GoTo HandleCampfireState_Err
+    Dim inventorySlot As Long
+    CampfirePanelX = reader.ReadInt8()
+    CampfirePanelY = reader.ReadInt8()
+    CampfireSecondsLeft = reader.ReadInt32()
+    CookRawObj = reader.ReadInt16()
+    CookCookedObj = reader.ReadInt16()
+    CookTotal = reader.ReadInt16()
+    CookRetrieved = reader.ReadInt16()
+    CookReady = reader.ReadInt16()
+    CookSecondsToNext = reader.ReadInt32()
+    CookSecondsPerUnit = reader.ReadInt32()
+    CampfireStateReceivedAt = CampfireGetTickCount()
+    If Not frmCampfire.visible Then
+        For inventorySlot = 1 To MAX_INVENTORY_SLOTS
+            With frmMain.Inventario
+                Call frmCampfire.InvCampfireUser.SetItem(inventorySlot, .ObjIndex(inventorySlot), .Amount(inventorySlot), .Equipped(inventorySlot), .grhIndex(inventorySlot), _
+                        .ObjType(inventorySlot), .MaxHit(inventorySlot), .MinHit(inventorySlot), .Def(inventorySlot), .Valor(inventorySlot), .ItemName(inventorySlot), _
+                        .ElementalTags(inventorySlot), .PuedeUsar(inventorySlot))
+            End With
+        Next inventorySlot
+    End If
+    Call frmCampfire.ShowCampfireState
+    Exit Sub
+HandleCampfireState_Err:
+    Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleCampfireState", Erl)
+End Sub
+
+Private Sub HandleCampfireExtinguished()
+    On Error GoTo HandleCampfireExtinguished_Err
+    Dim campfireX As Byte
+    Dim campfireY As Byte
+    campfireX = reader.ReadInt8()
+    campfireY = reader.ReadInt8()
+    If frmCampfire.visible Then
+        If campfireX = CampfirePanelX And campfireY = CampfirePanelY Then Call frmCampfire.ClosePanel
+    End If
+    Exit Sub
+HandleCampfireExtinguished_Err:
+    Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleCampfireExtinguished", Erl)
 End Sub
 
 Private Sub HandleErrorMessage()

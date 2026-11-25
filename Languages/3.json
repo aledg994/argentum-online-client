@@ -789,5 +789,17 @@
   "LBL_TOGGLE_AUTO_COMBAT": "Combate automático (NPC)",
   "MENSAJE_MAPA_ENTREGA": "Mapa de entrega: ",
   "MENSAJE_ENTREGAR_A": "Entregar a: ",
-  "MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTOCOMBATE ATIVO]"
+  "MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTOCOMBATE ATIVO]",
+  	"FOGATA_BOTON_COCINAR": "Cozinhar",
+	"FOGATA_BOTON_APAGAR": "Apagar fogueira",
+	"FOGATA_BOTON_SALIR": "Sair",
+	"FOGATA_DURA": "A fogueira dura",
+	"FOGATA_MINUTOS": "min a mais",
+	"FOGATA_PROXIMO_LISTO": "Próximo pronto em",
+	"FOGATA_TODO_LISTO": "Tudo pronto, retire sua comida",
+	"FOGATA_SIN_COCCION": "Coloque um alimento cru e aperte Cozinhar",
+	"FOGATA_CONFIRMAR_APAGAR": "Apagar a fogueira? O que estiver cozinhando será perdido.",
+	"FOGATA_CASILLERO_CARBON": "Carvão",
+	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
+	"FOGATA_CASILLERO_SALIDA": "Saída"
 }
