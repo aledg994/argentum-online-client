@@ -801,5 +801,7 @@
 	"FOGATA_CONFIRMAR_APAGAR": "Éteindre le feu ? Ce qui est en train de cuire sera perdu.",
 	"FOGATA_CASILLERO_CARBON": "Charbon",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingrédient",
-	"FOGATA_CASILLERO_SALIDA": "Sortie"
+	"FOGATA_CASILLERO_SALIDA": "Sortie",
+	"FOGATA_SALIDA_OCUPADA": "Il y a déjà une autre nourriture sur le feu. Récupère-la d'abord.",
+	"FOGATA_POR_COCINAR": "à cuire"
 }

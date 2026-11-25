@@ -801,5 +801,7 @@
 	"FOGATA_CONFIRMAR_APAGAR": "Apagar a fogueira? O que estiver cozinhando será perdido.",
 	"FOGATA_CASILLERO_CARBON": "Carvão",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
-	"FOGATA_CASILLERO_SALIDA": "Saída"
+	"FOGATA_CASILLERO_SALIDA": "Saída",
+	"FOGATA_SALIDA_OCUPADA": "Já há outra comida na fogueira. Retire-a primeiro.",
+	"FOGATA_POR_COCINAR": "para cozinhar"
 }

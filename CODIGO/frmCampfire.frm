@@ -205,6 +205,13 @@ Attribute InvCampfireOutput.VB_VarHelpID = -1
 Private m_IngredientSlot   As Byte
 Private m_IngredientAmount As Integer
 Private m_IngredientObj    As Integer
+Private m_DragSource       As Integer
+Private m_DragSlot         As Byte
+
+Private Const DRAG_SOURCE_NONE       As Integer = 0
+Private Const DRAG_SOURCE_USER       As Integer = 1
+Private Const DRAG_SOURCE_INGREDIENT As Integer = 2
+Private Const DRAG_SOURCE_OUTPUT     As Integer = 3
 Private m_QuantityStep     As Integer
 Private m_OpenMap          As Integer
 
@@ -244,8 +251,10 @@ Public Sub RefreshPanel()
     lblFogataTiempo.Caption = JsonLanguage.Item("FOGATA_DURA") & " " & (campfireSeconds \ SECONDS_PER_MINUTE) & " " & JsonLanguage.Item("FOGATA_MINUTOS")
     If CookTotal > 0 Then
         readyNow = GetLocalReadyCount(ElapsedSeconds)
-        If CookTotal - CookRetrieved - readyNow > 0 Then
-            Call InvCampfireIngredient.SetItem(1, CookRawObj, CookTotal - CookRetrieved - readyNow, False, ObjData(CookRawObj).grhIndex, 0, 0, 0, 0, 0, ObjData(CookRawObj).name, 0, 1)
+        If Not ValidateDeposit() Then m_IngredientAmount = 0
+        If CookTotal - CookRetrieved - readyNow + m_IngredientAmount > 0 Then
+            Call InvCampfireIngredient.SetItem(1, CookRawObj, CookTotal - CookRetrieved - readyNow + m_IngredientAmount, False, ObjData(CookRawObj).grhIndex, 0, 0, 0, 0, 0, _
+                    ObjData(CookRawObj).name, 0, 1)
         Else
             Call InvCampfireIngredient.ClearSlot(1)
         End If
@@ -260,7 +269,8 @@ Public Sub RefreshPanel()
         Else
             secondsToNext = GetLocalSecondsToNext(ElapsedSeconds)
             lblProximo.Caption = JsonLanguage.Item("FOGATA_PROXIMO_LISTO") & " " & (secondsToNext \ SECONDS_PER_MINUTE) & ":" & format$(secondsToNext Mod SECONDS_PER_MINUTE, "00") & _
-                    " (" & (CookRetrieved + readyNow) & "/" & CookTotal & ")"
+                    " (" & readyNow & "/" & (CookTotal - CookRetrieved) & ")"
+            If m_IngredientAmount > 0 Then lblProximo.Caption = lblProximo.Caption & " · " & m_IngredientAmount & " " & JsonLanguage.Item("FOGATA_POR_COCINAR")
         End If
     Else
         Call InvCampfireOutput.ClearSlot(1)
@@ -315,9 +325,17 @@ End Function
 
 Private Sub DepositIngredient(ByVal inventorySlot As Byte)
     On Error GoTo DepositIngredient_Err
-    If CookTotal > 0 Then Exit Sub
     If inventorySlot = 0 Then Exit Sub
     If frmMain.Inventario.ObjType(inventorySlot) <> eObjType.otRawFood Then Exit Sub
+    If CookTotal > 0 And frmMain.Inventario.ObjIndex(inventorySlot) <> CookRawObj Then
+        Call AddtoRichTextBox(frmMain.RecTxt, JsonLanguage.Item("FOGATA_SALIDA_OCUPADA"), 255, 128, 0, 1, 0)
+        Exit Sub
+    End If
+    If CookTotal > 0 Then
+        ' Ya hay una coccion de la misma comida: se suma directo, sin esperar a Cocinar
+        Call WriteCampfireCook(inventorySlot, min(GetQuantity(), frmMain.Inventario.Amount(inventorySlot)))
+        Exit Sub
+    End If
     If m_IngredientSlot = inventorySlot Then
         m_IngredientAmount = min(m_IngredientAmount + GetQuantity(), frmMain.Inventario.Amount(inventorySlot))
     Else
@@ -362,26 +380,35 @@ ShowUserSlotWithDeposit_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.ShowUserSlotWithDeposit", Erl)
 End Sub
 
-Private Sub RefreshDepositedIngredient()
-    On Error GoTo RefreshDepositedIngredient_Err
-    If m_IngredientSlot = 0 Then
-        Call InvCampfireIngredient.ClearSlot(1)
-        Exit Sub
-    End If
+Private Function ValidateDeposit() As Boolean
+    On Error GoTo ValidateDeposit_Err
+    If m_IngredientSlot = 0 Then Exit Function
     If frmMain.Inventario.ObjIndex(m_IngredientSlot) <> m_IngredientObj Then
         Call ClearDeposit
-        Exit Sub
+        Exit Function
     End If
     m_IngredientAmount = min(m_IngredientAmount, frmMain.Inventario.Amount(m_IngredientSlot))
     If m_IngredientAmount <= 0 Then
         Call ClearDeposit
+        Exit Function
+    End If
+    Call ShowUserSlotWithDeposit(m_IngredientSlot, m_IngredientAmount)
+    ValidateDeposit = True
+    Exit Function
+ValidateDeposit_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.ValidateDeposit", Erl)
+End Function
+
+Private Sub RefreshDepositedIngredient()
+    On Error GoTo RefreshDepositedIngredient_Err
+    If Not ValidateDeposit() Then
+        Call InvCampfireIngredient.ClearSlot(1)
         Exit Sub
     End If
     With frmMain.Inventario
         Call InvCampfireIngredient.SetItem(1, .ObjIndex(m_IngredientSlot), m_IngredientAmount, False, .grhIndex(m_IngredientSlot), .ObjType(m_IngredientSlot), 0, 0, 0, 0, _
                 .ItemName(m_IngredientSlot), 0, 1)
     End With
-    Call ShowUserSlotWithDeposit(m_IngredientSlot, m_IngredientAmount)
     Exit Sub
 RefreshDepositedIngredient_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.RefreshDepositedIngredient", Erl)
@@ -399,7 +426,6 @@ End Sub
 
 Private Sub cmdCocinar_Click()
     On Error GoTo cmdCocinar_Click_Err
-    If CookTotal > 0 Then Exit Sub
     If m_IngredientSlot = 0 Or m_IngredientAmount <= 0 Then Exit Sub
     Call WriteCampfireCook(m_IngredientSlot, m_IngredientAmount)
     Call ClearDeposit
@@ -522,6 +548,15 @@ Form_Unload_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Form_Unload", Erl)
 End Sub
 
+Private Sub Form_Deactivate()
+    On Error GoTo Form_Deactivate_Err
+    ' Click fuera del panel (otra ventana del juego): se cierra
+    Unload Me
+    Exit Sub
+Form_Deactivate_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Form_Deactivate", Erl)
+End Sub
+
 Private Sub interface_Click()
     On Error GoTo interface_Click_Err
     If InvCampfireOutput.ClickedInside Then
@@ -540,7 +575,7 @@ Private Sub interface_DblClick()
         Else
             Call DepositIngredient(InvCampfireUser.SelectedItem)
         End If
-    ElseIf InvCampfireIngredient.ClickedInside And CookTotal = 0 Then
+    ElseIf InvCampfireIngredient.ClickedInside And m_IngredientSlot > 0 Then
         Call ClearDeposit
         Call RefreshPanel
     End If
@@ -551,39 +586,67 @@ End Sub
 
 Private Sub InvCampfireUser_ItemDropped(ByVal Drag As Integer, ByVal Drop As Integer, ByVal x As Integer, ByVal y As Integer)
     On Error GoTo InvCampfireUser_ItemDropped_Err
-    If Drop > 0 Then
-        If Drag <> Drop Then Call WriteItemMove(Drag, Drop)
-        Exit Sub
-    End If
-    If InvCampfireIngredient.GetSlot(x, y) > 0 Then
-        Call DepositIngredient(Drag)
-    ElseIf InvCampfireCoal.GetSlot(x, y) > 0 Then
-        Call AddCoal(Drag)
-    End If
+    ' Solo mover dentro del propio inventario; el resto lo resuelve interface_MouseUp
+    If Drop > 0 And Drag <> Drop And Drop <> m_IngredientSlot And Drag <> m_IngredientSlot Then Call WriteItemMove(Drag, Drop)
     Exit Sub
 InvCampfireUser_ItemDropped_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.InvCampfireUser_ItemDropped", Erl)
 End Sub
 
-Private Sub InvCampfireIngredient_ItemDropped(ByVal Drag As Integer, ByVal Drop As Integer, ByVal x As Integer, ByVal y As Integer)
-    On Error GoTo InvCampfireIngredient_ItemDropped_Err
-    If Drop = 0 And CookTotal = 0 Then
-        If InvCampfireUser.GetSlot(x, y) > 0 Then
-            Call ClearDeposit
-            Call RefreshPanel
+Private Function IsInsideSlotArea(ByVal x As Single, ByVal y As Single, ByVal areaX As Integer, ByVal areaY As Integer) As Boolean
+    IsInsideSlotArea = x >= areaX And x < areaX + CAMPFIRE_SLOT_SIZE And y >= areaY And y < areaY + CAMPFIRE_SLOT_SIZE
+End Function
+
+Private Function IsInsideUserInventory(ByVal x As Single, ByVal y As Single) As Boolean
+    IsInsideUserInventory = x >= CAMPFIRE_USER_INV_X And x < CAMPFIRE_USER_INV_X + CAMPFIRE_USER_INV_WIDTH And y >= 0 And y < interface.ScaleHeight
+End Function
+
+Private Sub interface_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+    On Error GoTo interface_MouseDown_Err
+    m_DragSource = DRAG_SOURCE_NONE
+    m_DragSlot = 0
+    If Button <> vbRightButton Then Exit Sub
+    If IsInsideUserInventory(x, y) Then
+        m_DragSlot = InvCampfireUser.GetSlot(x, y)
+        If m_DragSlot > 0 Then
+            If InvCampfireUser.ObjIndex(m_DragSlot) > 0 Then m_DragSource = DRAG_SOURCE_USER
         End If
+    ElseIf IsInsideSlotArea(x, y, CAMPFIRE_INGREDIENT_X, CAMPFIRE_INGREDIENT_Y) Then
+        If m_IngredientSlot > 0 Then m_DragSource = DRAG_SOURCE_INGREDIENT
+    ElseIf IsInsideSlotArea(x, y, CAMPFIRE_OUTPUT_X, CAMPFIRE_OUTPUT_Y) Then
+        If InvCampfireOutput.ObjIndex(1) > 0 Then m_DragSource = DRAG_SOURCE_OUTPUT
     End If
     Exit Sub
-InvCampfireIngredient_ItemDropped_Err:
-    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.InvCampfireIngredient_ItemDropped", Erl)
+interface_MouseDown_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.interface_MouseDown", Erl)
 End Sub
 
-Private Sub InvCampfireOutput_ItemDropped(ByVal Drag As Integer, ByVal Drop As Integer, ByVal x As Integer, ByVal y As Integer)
-    On Error GoTo InvCampfireOutput_ItemDropped_Err
-    If Drop = 0 Then
-        If InvCampfireUser.GetSlot(x, y) > 0 Then Call WriteCampfireRetrieve
-    End If
+Private Sub interface_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+    On Error GoTo interface_MouseUp_Err
+    Dim dragSource As Integer
+    Dim dragSlot   As Byte
+    If Button <> vbRightButton Then Exit Sub
+    dragSource = m_DragSource
+    dragSlot = m_DragSlot
+    m_DragSource = DRAG_SOURCE_NONE
+    m_DragSlot = 0
+    Select Case dragSource
+        Case DRAG_SOURCE_USER
+            If IsInsideSlotArea(x, y, CAMPFIRE_INGREDIENT_X, CAMPFIRE_INGREDIENT_Y) Then
+                Call DepositIngredient(dragSlot)
+            ElseIf IsInsideSlotArea(x, y, CAMPFIRE_COAL_X, CAMPFIRE_COAL_Y) Then
+                Call AddCoal(dragSlot)
+            End If
+        Case DRAG_SOURCE_INGREDIENT
+            If IsInsideUserInventory(x, y) Then
+                Call ClearDeposit
+                Call RefreshPanel
+            End If
+        Case DRAG_SOURCE_OUTPUT
+            If IsInsideUserInventory(x, y) Then Call WriteCampfireRetrieve
+    End Select
     Exit Sub
-InvCampfireOutput_ItemDropped_Err:
-    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.InvCampfireOutput_ItemDropped", Erl)
+interface_MouseUp_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.interface_MouseUp", Erl)
 End Sub
+

@@ -801,5 +801,7 @@
 	"FOGATA_CONFIRMAR_APAGAR": "¿Apagar la fogata? Se perderá lo que se esté cocinando.",
 	"FOGATA_CASILLERO_CARBON": "Carbón",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
-	"FOGATA_CASILLERO_SALIDA": "Salida"
+	"FOGATA_CASILLERO_SALIDA": "Salida",
+	"FOGATA_SALIDA_OCUPADA": "Ya hay otra comida en la fogata. Retirala primero.",
+	"FOGATA_POR_COCINAR": "por cocinar"
 }

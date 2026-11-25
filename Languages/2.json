@@ -801,5 +801,7 @@
 	"FOGATA_CONFIRMAR_APAGAR": "Put out the campfire? Anything cooking will be lost.",
 	"FOGATA_CASILLERO_CARBON": "Coal",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingredient",
-	"FOGATA_CASILLERO_SALIDA": "Output"
+	"FOGATA_CASILLERO_SALIDA": "Output",
+	"FOGATA_SALIDA_OCUPADA": "There's other food at the campfire. Collect it first.",
+	"FOGATA_POR_COCINAR": "waiting to cook"
 }
