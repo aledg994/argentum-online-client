@@ -1662,7 +1662,7 @@ Begin VB.Form frmPanelgm
    Begin VB.Menu cmdHerramientas 
       Caption         =   "Herramientas"
       Begin VB.Menu torneos 
-         Caption         =   "Torneos y Eventos"
+         Caption         =   "Eventos"
          Begin VB.Menu creartoneo 
             Caption         =   "Crear Nuevo"
          End
@@ -1674,7 +1674,7 @@ Begin VB.Form frmPanelgm
          End
       End
       Begin VB.Menu cmdcrearevento 
-         Caption         =   "Eventos"
+         Caption         =   "Bonus de Recoleccion"
          Begin VB.Menu evento1 
             Caption         =   "Recolección x2 - 30 min"
          End
@@ -3105,7 +3105,7 @@ End Sub
 
 Private Sub torneo_cancelar_Click()
     On Error GoTo torneo_cancelar_Click_Err
-    Call WriteCancelarEvento
+    Call WriteCancelarTorneo
     Exit Sub
 torneo_cancelar_Click_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmPanelGM.torneo_cancelar_Click", Erl)

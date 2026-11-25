@@ -1447,7 +1447,7 @@ End Sub
 
 Private Sub Command1_Click()
     On Error GoTo Command1_Click_Err
-    Call WriteCreaerTorneo(nivelmin, nivelmax, cupos, costo.text, Check1.value, Check2.value, Check3.value, Check4.value, Check5.value, Check6.value, Check7.value, Check8.value, _
+    Call WriteCrearTorneo(nivelmin, nivelmax, cupos, costo.Text, Check1.value, Check2.value, Check3.value, Check4.value, Check5.value, Check6.value, Check7.value, Check8.value, _
             Check9.value, Check10.value, Check11.value, Check12.value, map, x, y, nombre, reglas)
     Exit Sub
 Command1_Click_Err:

@@ -595,8 +595,9 @@ Sub MoveTo(ByVal Heading As E_Heading, ByVal Dumb As Boolean)
             End If
         Else
             If Not UserAvisado Then
-                If UserDescansar Then
-                    WriteRest 'Stop resting (we do NOT have the 1 step enforcing anymore) sono como un tema de los guns.
+                If UserDescansar And Not UserRestStopPending Then
+                    UserRestStopPending = True
+                    Call WriteRest
                 End If
                 UserAvisado = True
             End If

@@ -983,6 +983,7 @@ Public UserPort                                 As Integer
 Public UserServerIP                             As String
 Public UserEstadisticas                         As tEstadisticasUsu
 Public UserDescansar                            As Boolean
+Public UserRestStopPending                      As Boolean
 Public Moviendose                               As Boolean
 Public FPSFLAG                                  As Byte
 Public AlphaMacro                               As Byte

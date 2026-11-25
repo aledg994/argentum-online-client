@@ -5405,16 +5405,16 @@ WriteCompletarViaje_Err:
     '</EhFooter>
 End Sub
 
-Public Sub WriteCreaerTorneo(ByVal nivelminimo As Byte, _
+Public Sub WriteCrearTorneo(ByVal nivelminimo As Byte, _
                              ByVal nivelmaximo As Byte, _
                              ByVal cupos As Byte, _
                              ByVal costo As Long, _
                              ByVal mago As Byte, _
-                             ByVal clerico As Byte, _
+                             ByVal clerigo As Byte, _
                              ByVal guerrero As Byte, _
                              ByVal asesino As Byte, _
                              ByVal bardo As Byte, _
-                             ByVal druido As Byte, _
+                             ByVal druida As Byte, _
                              ByVal paladin As Byte, _
                              ByVal cazador As Byte, _
                              ByVal Trabajador As Byte, _
@@ -5427,7 +5427,7 @@ Public Sub WriteCreaerTorneo(ByVal nivelminimo As Byte, _
                              ByVal Name As String, _
                              ByVal reglas As String)
     '<EhHeader>
-    On Error GoTo WriteCreaerTorneo_Err
+    On Error GoTo WriteCrearTorneo_Err
     '</EhHeader>
     Call Writer.WriteInt16(ClientPacketID.eCrearTorneo)
     Call Writer.WriteInt8(nivelminimo)
@@ -5435,11 +5435,11 @@ Public Sub WriteCreaerTorneo(ByVal nivelminimo As Byte, _
     Call Writer.WriteInt8(cupos)
     Call Writer.WriteInt32(costo)
     Call Writer.WriteInt8(mago)
-    Call Writer.WriteInt8(clerico)
+    Call Writer.WriteInt8(clerigo)
     Call Writer.WriteInt8(guerrero)
     Call Writer.WriteInt8(asesino)
     Call Writer.WriteInt8(bardo)
-    Call Writer.WriteInt8(druido)
+    Call Writer.WriteInt8(druida)
     Call Writer.WriteInt8(paladin)
     Call Writer.WriteInt8(cazador)
     Call Writer.WriteInt8(Trabajador)
@@ -5454,9 +5454,9 @@ Public Sub WriteCreaerTorneo(ByVal nivelminimo As Byte, _
     Call modNetwork.send(Writer)
     '<EhFooter>
     Exit Sub
-WriteCreaerTorneo_Err:
+WriteCrearTorneo_Err:
     Call Writer.Clear
-    Call RegistrarError(Err.Number, Err.Description, "Argentum20.Protocol_Writes.WriteCreaerTorneo", Erl)
+    Call RegistrarError(Err.Number, Err.Description, "Argentum20.Protocol_Writes.WriteCrearTorneo", Erl)
     '</EhFooter>
 End Sub
 
