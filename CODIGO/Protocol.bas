@@ -518,6 +518,7 @@ Private Sub HandleLogged()
     UserCiego = False
     EngineRun = True
     UserDescansar = False
+    UserRestStopPending = False
     Nombres = True
     Pregunta = False
     frmMain.stabar.visible = True
@@ -779,6 +780,7 @@ Public Sub HandleDisconnect()
     pausa = False
     UserMeditar = False
     UserDescansar = False
+    UserRestStopPending = False
     UserNavegando = False
     UserMontado = False
     UserNadando = False
@@ -3772,12 +3774,11 @@ errhandler:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleAlquimiaObjects", Erl)
 End Sub
 
-''
-' Handles the RestOK message.
 Private Sub HandleRestOK()
     'Remove packet ID
     On Error GoTo HandleRestOK_Err
     UserDescansar = Not UserDescansar
+    UserRestStopPending = False
     Exit Sub
 HandleRestOK_Err:
     Call RegistrarError(Err.Number, Err.Description, "Protocol.HandleRestOK", Erl)
