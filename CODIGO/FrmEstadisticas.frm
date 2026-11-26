@@ -17,6 +17,235 @@ Begin VB.Form frmEstadisticas
    ScaleWidth      =   473
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
+   Begin VB.Label lblNavegar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   52
+      Top             =   6810
+      Width           =   1605
+   End
+   Begin VB.Label lblDomar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   51
+      Top             =   6420
+      Width           =   1605
+   End
+   Begin VB.Label lblComercio 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   50
+      Top             =   6060
+      Width           =   1605
+   End
+   Begin VB.Label lblOcultar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   49
+      Top             =   5670
+      Width           =   1605
+   End
+   Begin VB.Label lblSupervivencia 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   48
+      Top             =   5280
+      Width           =   1605
+   End
+   Begin VB.Label lblAlquimia 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   47
+      Top             =   4620
+      Width           =   1605
+   End
+   Begin VB.Label lblSastreria 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   46
+      Top             =   4200
+      Width           =   1605
+   End
+   Begin VB.Label lblHerreria 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   45
+      Top             =   3825
+      Width           =   1605
+   End
+   Begin VB.Label lblCarpinteria 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   44
+      Top             =   3420
+      Width           =   1605
+   End
+   Begin VB.Label lblMinar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   43
+      Top             =   3060
+      Width           =   1605
+   End
+   Begin VB.Label lblPescar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   42
+      Top             =   2670
+      Width           =   1605
+   End
+   Begin VB.Label lblTalar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   3720
+      TabIndex        =   41
+      Top             =   2280
+      Width           =   1605
+   End
+   Begin VB.Label lblLiderazgo 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   40
+      Top             =   6780
+      Width           =   2085
+   End
+   Begin VB.Label lblRobar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   39
+      Top             =   6420
+      Width           =   2085
+   End
+   Begin VB.Label lblCombateConDagas 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   38
+      Top             =   5670
+      Width           =   2085
+   End
+   Begin VB.Label lblArmasDistancia 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   37
+      Top             =   5310
+      Width           =   2085
+   End
+   Begin VB.Label lblCombateSinArmas 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   36
+      Top             =   4920
+      Width           =   2085
+   End
+   Begin VB.Label lblDefensaEscudos 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   35
+      Top             =   4560
+      Width           =   2085
+   End
+   Begin VB.Label lblDestrezaCombate 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   34
+      Top             =   4170
+      Width           =   2085
+   End
+   Begin VB.Label lblComabateConArmas 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   33
+      Top             =   3795
+      Width           =   2085
+   End
+   Begin VB.Label lblResistenciaMagica 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   32
+      Top             =   3045
+      Width           =   2085
+   End
+   Begin VB.Label lblMeditar 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   31
+      Top             =   2670
+      Width           =   2085
+   End
+   Begin VB.Label lblMagia 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Height          =   195
+      Left            =   120
+      TabIndex        =   30
+      Top             =   2280
+      Width           =   2085
+   End
+   Begin VB.Label lblWiki 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      ForeColor       =   &H000080FF&
+      Height          =   75
+      Left            =   240
+      TabIndex        =   29
+      Top             =   7500
+      Width           =   6525
+   End
+   Begin VB.Label lblWarning 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      ForeColor       =   &H00E0E0E0&
+      Height          =   195
+      Left            =   360
+      TabIndex        =   28
+      Top             =   7320
+      Width           =   6405
+   End
    Begin VB.Image command1 
       Height          =   300
       Index           =   49
@@ -1191,6 +1420,7 @@ Private Sub Form_Load()
     RealizoCambios = 0
     ReDim flags(1 To NUMSKILLS)
     Call loadButtons
+    Call LoadToolTips
     Exit Sub
 Form_Load_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmEstadisticas.Form_Load", Erl)
@@ -1282,6 +1512,22 @@ imgCerrar_Click_Err:
     Resume Next
 End Sub
 
+Private Sub lblWiki_Click()
+    On Error GoTo lblWiki_Click_Err
+    
+    If MapDat.Seguro = 1 Then
+        ShellExecute Me.hWnd, "open", "https://www.argentumonline.com.ar/wiki/guia-general/skills-clases", "", "", 0
+    Else
+        If MsgBox(JsonLanguage.Item("MENSAJE_PAGINA_WEB_YESNO"), vbYesNo, JsonLanguage.Item("MENSAJE_PAGINA_WEB")) = vbYes Then
+            ShellExecute Me.hWnd, "open", "https://www.argentumonline.com.ar/wiki/guia-general/skills-clases", "", "", 0
+        End If
+    End If
+    Exit Sub
+lblWiki_Click_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmEstadisticas.lblWiki_Click", Erl)
+    Resume Next
+End Sub
+
 Private Sub skills_Click(Index As Integer)
     On Error GoTo skills_Click_Err
     AddtoRichTextBox frmMain.RecTxt, JsonLanguage.Item("MENSAJE_INFORMACION_DE_SKILL") & SkillsDesc(Index), 2, 51, 223, 1, 1
@@ -1305,5 +1551,38 @@ Private Sub Skills_MouseMove(Index As Integer, Button As Integer, Shift As Integ
     Exit Sub
 Skills_MouseMove_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmEstadisticas.Skills_MouseMove", Erl)
+    Resume Next
+End Sub
+
+Private Sub LoadToolTips()
+    On Error GoTo LoadToolTips_Err
+    frmEstadisticas.lblWarning.Caption = JsonLanguage.Item("MENSAJE_ADVERTENCIA_SKILLS")
+    frmEstadisticas.lblWiki.Caption = JsonLanguage.Item("MENSAJE_VER_WIKI_SKILLS")
+    frmEstadisticas.lblMagia.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_MAGIA")
+    frmEstadisticas.lblMeditar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_MEDITAR")
+    frmEstadisticas.lblResistenciaMagica.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_RESISTENCIA_MAGICA")
+    frmEstadisticas.lblComabateConArmas.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_COMBATE_CON_ARMAS")
+    frmEstadisticas.lblDestrezaCombate.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_DESTREZA_COMBATE")
+    frmEstadisticas.lblDefensaEscudos.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_DEFENSA_ESCUDOS")
+    frmEstadisticas.lblCombateSinArmas.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_COMBATE_SIN_ARMAS")
+    frmEstadisticas.lblArmasDistancia.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_ARMAS_DISTANCIA")
+    frmEstadisticas.lblCombateConDagas.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_COMBATE_CON_DAGAS")
+    frmEstadisticas.lblRobar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_ROBAR")
+    frmEstadisticas.lblLiderazgo.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_LIDERAZGO")
+    frmEstadisticas.lblTalar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_TALAR")
+    frmEstadisticas.lblPescar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_PESCAR")
+    frmEstadisticas.lblMinar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_MINAR")
+    frmEstadisticas.lblCarpinteria.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_CARPINTERIA")
+    frmEstadisticas.lblHerreria.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_HERRERIA")
+    frmEstadisticas.lblSastreria.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_SASTRERIA")
+    frmEstadisticas.lblAlquimia.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_ALQUIMIA")
+    frmEstadisticas.lblSupervivencia.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_SUPERVIVENCIA")
+    frmEstadisticas.lblOcultar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_OCULTAR")
+    frmEstadisticas.lblComercio.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_COMERCIO")
+    frmEstadisticas.lblDomar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_DOMAR")
+    frmEstadisticas.lblNavegar.ToolTipText = JsonLanguage.Item("TOOLTIP_SKILL_NAVEGAR")
+    Exit Sub
+LoadToolTips_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmEstadisticas.LoadToolTips", Erl)
     Resume Next
 End Sub
