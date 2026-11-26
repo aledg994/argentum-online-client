@@ -364,6 +364,22 @@ ClearDeposit_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.ClearDeposit", Erl)
 End Sub
 
+Private Sub RemoveIngredient()
+    On Error GoTo RemoveIngredient_Err
+    If m_IngredientSlot > 0 Then
+        ' Depositado pero sin mandar a cocinar: se devuelven N unidades visualmente
+        m_IngredientAmount = m_IngredientAmount - GetQuantity()
+        If m_IngredientAmount <= 0 Then Call ClearDeposit
+        Call RefreshPanel
+    ElseIf CookTotal > 0 Then
+        ' Ya se esta cocinando: se cancelan N unidades y el server devuelve los crudos
+        Call WriteCampfireCancelCook(GetQuantity())
+    End If
+    Exit Sub
+RemoveIngredient_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.RemoveIngredient", Erl)
+End Sub
+
 Private Sub ShowUserSlotWithDeposit(ByVal inventorySlot As Byte, ByVal reservedAmount As Integer)
     On Error GoTo ShowUserSlotWithDeposit_Err
     With frmMain.Inventario
@@ -575,9 +591,8 @@ Private Sub interface_DblClick()
         Else
             Call DepositIngredient(InvCampfireUser.SelectedItem)
         End If
-    ElseIf InvCampfireIngredient.ClickedInside And m_IngredientSlot > 0 Then
-        Call ClearDeposit
-        Call RefreshPanel
+    ElseIf InvCampfireIngredient.ClickedInside And InvCampfireIngredient.ObjIndex(1) > 0 Then
+        Call RemoveIngredient
     End If
     Exit Sub
 interface_DblClick_Err:
@@ -612,7 +627,7 @@ Private Sub interface_MouseDown(Button As Integer, Shift As Integer, x As Single
             If InvCampfireUser.ObjIndex(m_DragSlot) > 0 Then m_DragSource = DRAG_SOURCE_USER
         End If
     ElseIf IsInsideSlotArea(x, y, CAMPFIRE_INGREDIENT_X, CAMPFIRE_INGREDIENT_Y) Then
-        If m_IngredientSlot > 0 Then m_DragSource = DRAG_SOURCE_INGREDIENT
+        If InvCampfireIngredient.ObjIndex(1) > 0 Then m_DragSource = DRAG_SOURCE_INGREDIENT
     ElseIf IsInsideSlotArea(x, y, CAMPFIRE_OUTPUT_X, CAMPFIRE_OUTPUT_Y) Then
         If InvCampfireOutput.ObjIndex(1) > 0 Then m_DragSource = DRAG_SOURCE_OUTPUT
     End If
@@ -638,10 +653,7 @@ Private Sub interface_MouseUp(Button As Integer, Shift As Integer, x As Single, 
                 Call AddCoal(dragSlot)
             End If
         Case DRAG_SOURCE_INGREDIENT
-            If IsInsideUserInventory(x, y) Then
-                Call ClearDeposit
-                Call RefreshPanel
-            End If
+            If IsInsideUserInventory(x, y) Then Call RemoveIngredient
         Case DRAG_SOURCE_OUTPUT
             If IsInsideUserInventory(x, y) Then Call WriteCampfireRetrieve
     End Select

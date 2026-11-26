@@ -1157,6 +1157,17 @@ WriteCampfireExtinguish_Err:
     Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireExtinguish", Erl)
 End Sub
 
+Public Sub WriteCampfireCancelCook(ByVal cancelAmount As Integer)
+    On Error GoTo WriteCampfireCancelCook_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireCancelCook)
+    Call Writer.WriteInt16(cancelAmount)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireCancelCook_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireCancelCook", Erl)
+End Sub
+
 Public Sub WriteCraftAlquimista(ByVal Item As Integer)
     '<EhHeader>
     On Error GoTo WriteCraftAlquimista_Err

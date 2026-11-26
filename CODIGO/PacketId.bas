@@ -545,6 +545,7 @@ Public Enum ClientPacketID
     eCampfireRetrieve
     eCampfireAddCoal
     eCampfireExtinguish
+    eCampfireCancelCook
     eMaxPacket
     [PacketCount]
 End Enum
