@@ -189,6 +189,7 @@ Private Const MIN_QUANTITY   As Integer = 1
 Private Const MAX_QUANTITY   As Integer = 10000
 Private Const MS_PER_SECOND  As Long = 1000
 Private Const SECONDS_PER_MINUTE As Long = 60
+Private Const SECONDS_PER_HOUR   As Long = 3600
 
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lparam As Long) As Long
@@ -248,7 +249,12 @@ Public Sub RefreshPanel()
     If ElapsedSeconds < 0 Then ElapsedSeconds = 0
     campfireSeconds = CampfireSecondsLeft - ElapsedSeconds
     If campfireSeconds < 0 Then campfireSeconds = 0
-    lblFogataTiempo.Caption = JsonLanguage.Item("FOGATA_DURA") & " " & (campfireSeconds \ SECONDS_PER_MINUTE) & " " & JsonLanguage.Item("FOGATA_MINUTOS")
+    If campfireSeconds >= SECONDS_PER_HOUR Then
+        lblFogataTiempo.Caption = JsonLanguage.Item("FOGATA_DURA") & " " & (campfireSeconds \ SECONDS_PER_HOUR) & " h " & ((campfireSeconds Mod SECONDS_PER_HOUR) \ SECONDS_PER_MINUTE) & " " & _
+                JsonLanguage.Item("FOGATA_MINUTOS")
+    Else
+        lblFogataTiempo.Caption = JsonLanguage.Item("FOGATA_DURA") & " " & (campfireSeconds \ SECONDS_PER_MINUTE) & " " & JsonLanguage.Item("FOGATA_MINUTOS")
+    End If
     If CookTotal > 0 Then
         readyNow = GetLocalReadyCount(ElapsedSeconds)
         If Not ValidateDeposit() Then m_IngredientAmount = 0
