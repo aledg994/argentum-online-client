@@ -26,46 +26,6 @@ Begin VB.Form frmCampfire
       Left            =   0
       Top             =   0
    End
-   Begin VB.CommandButton cmdApagar 
-      Caption         =   "Apagar fogata"
-      Height          =   420
-      Left            =   630
-      TabIndex        =   6
-      Top             =   6465
-      Width           =   1600
-   End
-   Begin VB.CommandButton cmdSalir 
-      Caption         =   "Salir"
-      Height          =   420
-      Left            =   5300
-      TabIndex        =   5
-      Top             =   6465
-      Width           =   1000
-   End
-   Begin VB.CommandButton cmdCocinar 
-      Caption         =   "Cocinar"
-      Height          =   420
-      Left            =   6400
-      TabIndex        =   4
-      Top             =   6465
-      Width           =   1100
-   End
-   Begin VB.CommandButton cmdMas 
-      Caption         =   "+"
-      Height          =   315
-      Left            =   4500
-      TabIndex        =   3
-      Top             =   6525
-      Width           =   315
-   End
-   Begin VB.CommandButton cmdMenos 
-      Caption         =   "-"
-      Height          =   315
-      Left            =   3195
-      TabIndex        =   2
-      Top             =   6525
-      Width           =   315
-   End
    Begin VB.TextBox cantidad 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -106,6 +66,40 @@ Begin VB.Form frmCampfire
       Top             =   1605
       Width           =   6885
    End
+   Begin VB.Image cmdApagar 
+      Height          =   420
+      Left            =   630
+      Tag             =   "0"
+      Top             =   6465
+      Width           =   1600
+   End
+   Begin VB.Image salir 
+      Height          =   375
+      Left            =   7680
+      Top             =   0
+      Width           =   495
+   End
+   Begin VB.Image cmdCocinar 
+      Height          =   420
+      Left            =   6400
+      Tag             =   "0"
+      Top             =   6465
+      Width           =   1100
+   End
+   Begin VB.Image cmdMas 
+      Height          =   315
+      Left            =   4500
+      Tag             =   "0"
+      Top             =   6525
+      Width           =   315
+   End
+   Begin VB.Image cmdMenos 
+      Height          =   315
+      Left            =   3195
+      Tag             =   "0"
+      Top             =   6525
+      Width           =   315
+   End
    Begin VB.Label lblProximo 
       BackStyle       =   0  'Transparent
       BeginProperty Font 
@@ -120,7 +114,7 @@ Begin VB.Form frmCampfire
       ForeColor       =   &H00C0C0C0&
       Height          =   255
       Left            =   630
-      TabIndex        =   9
+      TabIndex        =   2
       Top             =   5700
       Width           =   1.03275e5
    End
@@ -138,7 +132,7 @@ Begin VB.Form frmCampfire
       ForeColor       =   &H00FFFFFF&
       Height          =   255
       Left            =   630
-      TabIndex        =   8
+      TabIndex        =   3
       Top             =   5400
       Width           =   1.03275e5
    End
@@ -156,7 +150,7 @@ Begin VB.Form frmCampfire
       ForeColor       =   &H0080C0FF&
       Height          =   255
       Left            =   630
-      TabIndex        =   7
+      TabIndex        =   4
       Top             =   1260
       Width           =   1.03275e5
    End
@@ -215,6 +209,19 @@ Private Const DRAG_SOURCE_INGREDIENT As Integer = 2
 Private Const DRAG_SOURCE_OUTPUT     As Integer = 3
 Private m_QuantityStep     As Integer
 Private m_OpenMap          As Integer
+
+Private cBotonMas              As clsGraphicalButton
+Private cBotonMenos            As clsGraphicalButton
+Private cBotonCerrar           As clsGraphicalButton
+Private cBotonCocinar          As clsGraphicalButton
+Private cBotonApagar           As clsGraphicalButton
+
+Private Const BTN_COOK_DEFAULT As String = "boton-cocinar-default.bmp"
+Private Const BTN_COOK_OVER    As String = "boton-cocinar-over.bmp"
+Private Const BTN_COOK_OFF     As String = "boton-cocinar-off.bmp"
+Private Const BTN_OFF_DEFAULT  As String = "boton-apagar-default.bmp"
+Private Const BTN_OFF_OVER     As String = "boton-apagar-over.bmp"
+Private Const BTN_OFF_OFF      As String = "boton-apagar-off.bmp"
 
 Public Sub ShowCampfireState()
     On Error GoTo ShowCampfireState_Err
@@ -466,12 +473,12 @@ cmdApagar_Click_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.cmdApagar_Click", Erl)
 End Sub
 
-Private Sub cmdSalir_Click()
-    On Error GoTo cmdSalir_Click_Err
+Private Sub salir_Click()
+    On Error GoTo Salir_Click_Err
     Unload Me
     Exit Sub
-cmdSalir_Click_Err:
-    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.cmdSalir_Click", Erl)
+Salir_Click_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Salir_Click", Erl)
 End Sub
 
 Private Sub cmdMas_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
@@ -533,12 +540,28 @@ Private Sub Form_Load()
     Me.Picture = Nothing
     Call FormParser.Parse_Form(Me)
     cantidad.BackColor = RGB(18, 19, 13)
-    cmdCocinar.Caption = JsonLanguage.Item("FOGATA_BOTON_COCINAR")
-    cmdApagar.Caption = JsonLanguage.Item("FOGATA_BOTON_APAGAR")
-    cmdSalir.Caption = JsonLanguage.Item("FOGATA_BOTON_SALIR")
+    Call LoadButtons
     Exit Sub
 Form_Load_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Form_Load", Erl)
+End Sub
+
+Private Sub LoadButtons()
+    On Error GoTo LoadButtons_Err
+    Set cBotonMas = New clsGraphicalButton
+    Set cBotonMenos = New clsGraphicalButton
+    Set cBotonCerrar = New clsGraphicalButton
+    Set cBotonCocinar = New clsGraphicalButton
+    Set cBotonApagar = New clsGraphicalButton
+    Call cBotonCerrar.Initialize(salir, "boton-cerrar-default.bmp", "boton-cerrar-over.bmp", "boton-cerrar-off.bmp", Me)
+    Call cBotonMas.Initialize(cmdMas, "boton-sm-mas-default.bmp", "boton-sm-mas-over.bmp", "boton-sm-mas-off.bmp", Me)
+    Call cBotonMenos.Initialize(cmdMenos, "boton-sm-menos-default.bmp", "boton-sm-menos-over.bmp", "boton-sm-menos-off.bmp", Me)
+    Call cBotonCocinar.Initialize(cmdCocinar, BTN_COOK_DEFAULT, BTN_COOK_OVER, BTN_COOK_OFF, Me)
+    Call cBotonApagar.Initialize(cmdApagar, BTN_OFF_DEFAULT, BTN_OFF_OVER, BTN_OFF_OFF, Me)
+    Exit Sub
+LoadButtons_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.LoadButtons", Erl)
+    Resume Next
 End Sub
 
 Private Sub Form_KeyPress(KeyAscii As Integer)
