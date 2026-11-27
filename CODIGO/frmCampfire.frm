@@ -1,6 +1,5 @@
 VERSION 5.00
 Begin VB.Form frmCampfire 
-   BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   7215
    ClientLeft      =   0
@@ -42,11 +41,11 @@ Begin VB.Form frmCampfire
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   210
-      Left            =   3600
+      Left            =   3720
       TabIndex        =   1
       Text            =   "1"
       Top             =   6555
-      Width           =   810
+      Width           =   690
    End
    Begin VB.PictureBox interface 
       Appearance      =   0  'Flat
@@ -68,10 +67,10 @@ Begin VB.Form frmCampfire
    End
    Begin VB.Image cmdApagar 
       Height          =   420
-      Left            =   630
+      Left            =   5505
       Tag             =   "0"
       Top             =   6465
-      Width           =   1600
+      Width           =   1605
    End
    Begin VB.Image salir 
       Height          =   375
@@ -81,23 +80,23 @@ Begin VB.Form frmCampfire
    End
    Begin VB.Image cmdCocinar 
       Height          =   420
-      Left            =   6400
+      Left            =   825
       Tag             =   "0"
       Top             =   6465
-      Width           =   1100
+      Width           =   1605
    End
    Begin VB.Image cmdMas 
       Height          =   315
-      Left            =   4500
+      Left            =   4650
       Tag             =   "0"
-      Top             =   6525
+      Top             =   6510
       Width           =   315
    End
    Begin VB.Image cmdMenos 
       Height          =   315
       Left            =   3195
       Tag             =   "0"
-      Top             =   6525
+      Top             =   6510
       Width           =   315
    End
    Begin VB.Label lblProximo 
@@ -149,10 +148,10 @@ Begin VB.Form frmCampfire
       EndProperty
       ForeColor       =   &H0080C0FF&
       Height          =   255
-      Left            =   630
+      Left            =   2850
       TabIndex        =   4
-      Top             =   1260
-      Width           =   1.03275e5
+      Top             =   5745
+      Width           =   1.03995e5
    End
 End
 Attribute VB_Name = "frmCampfire"
@@ -537,7 +536,7 @@ End Sub
 
 Private Sub Form_Load()
     On Error GoTo Form_Load_Err
-    Me.Picture = Nothing
+    Me.Picture = LoadInterface("fogata.bmp")
     Call FormParser.Parse_Form(Me)
     cantidad.BackColor = RGB(18, 19, 13)
     Call LoadButtons

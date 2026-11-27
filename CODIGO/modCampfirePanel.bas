@@ -21,9 +21,9 @@ Public CampfireStateReceivedAt  As Long
 Public Const CAMPFIRE_SLOT_SIZE        As Integer = 35
 Public Const CAMPFIRE_USER_INV_X       As Integer = 252
 Public Const CAMPFIRE_USER_INV_WIDTH   As Integer = 210
-Public Const CAMPFIRE_COAL_X           As Integer = 76
-Public Const CAMPFIRE_COAL_Y           As Integer = 0
-Public Const CAMPFIRE_INGREDIENT_X     As Integer = 38
-Public Const CAMPFIRE_INGREDIENT_Y     As Integer = 114
-Public Const CAMPFIRE_OUTPUT_X         As Integer = 152
-Public Const CAMPFIRE_OUTPUT_Y         As Integer = 114
+Public Const CAMPFIRE_COAL_X           As Integer = 88
+Public Const CAMPFIRE_COAL_Y           As Integer = 40
+Public Const CAMPFIRE_INGREDIENT_X     As Integer = 28
+Public Const CAMPFIRE_INGREDIENT_Y     As Integer = 125
+Public Const CAMPFIRE_OUTPUT_X         As Integer = 147
+Public Const CAMPFIRE_OUTPUT_Y         As Integer = 125

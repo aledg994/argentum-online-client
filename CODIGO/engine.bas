@@ -2590,13 +2590,14 @@ Public Sub DrawInterfaceCampfire()
     InvRect.Bottom = frmCampfire.interface.ScaleHeight
     RenderCullingRect = InvRect
     Call Engine_BeginScene
+    Call Draw_GrhIndex(100840, 0, 0)
     Call frmCampfire.InvCampfireUser.DrawInventory
     Call frmCampfire.InvCampfireCoal.DrawInventory
     Call frmCampfire.InvCampfireIngredient.DrawInventory
     Call frmCampfire.InvCampfireOutput.DrawInventory
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_CARBON"), 116, 10, COLOR_WHITE)
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), 30, 152, COLOR_WHITE)
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), 150, 152, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_CARBON"), 85, 25, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), 10, 111, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), 146, 111, COLOR_WHITE)
     Call frmCampfire.InvCampfireUser.DrawDraggedItem
     Call frmCampfire.InvCampfireCoal.DrawDraggedItem
     Call frmCampfire.InvCampfireIngredient.DrawDraggedItem
@@ -3296,9 +3297,9 @@ Public Sub InitializeInventory()
     Set frmCampfire.InvCampfireIngredient = New clsGrapchicalInventory
     Set frmCampfire.InvCampfireOutput = New clsGrapchicalInventory
     Call frmCampfire.InvCampfireUser.Initialize(frmCampfire.interface, MAX_INVENTORY_SLOTS, 210, 0, 252, 0, 3, 3, True)
-    Call frmCampfire.InvCampfireCoal.Initialize(frmCampfire.interface, 1, 35, 35, 76, 0, 3, 3, True)
-    Call frmCampfire.InvCampfireIngredient.Initialize(frmCampfire.interface, 1, 35, 35, 38, 114, 3, 3, True)
-    Call frmCampfire.InvCampfireOutput.Initialize(frmCampfire.interface, 1, 35, 35, 152, 114, 3, 3, True)
+    Call frmCampfire.InvCampfireCoal.Initialize(frmCampfire.interface, 1, 35, 35, CAMPFIRE_COAL_X, CAMPFIRE_COAL_Y, 3, 3, True)
+    Call frmCampfire.InvCampfireIngredient.Initialize(frmCampfire.interface, 1, 35, 35, CAMPFIRE_INGREDIENT_X, CAMPFIRE_INGREDIENT_Y, 3, 3, True)
+    Call frmCampfire.InvCampfireOutput.Initialize(frmCampfire.interface, 1, 35, 35, CAMPFIRE_OUTPUT_X, CAMPFIRE_OUTPUT_Y, 3, 3, True)
 
     Call frmSkins.InvSkins.Initialize(frmSkins.interface, MAX_SKINSINVENTORY_SLOTS, 210, 0, 0, 0, 3, 3, False, , True)
 
