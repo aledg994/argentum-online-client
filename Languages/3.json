@@ -795,7 +795,7 @@
 	"FOGATA_TODO_LISTO": "Tudo pronto, retire sua comida",
 	"FOGATA_SIN_COCCION": "Coloque um alimento cru e aperte Cozinhar",
 	"FOGATA_CONFIRMAR_APAGAR": "Apagar a fogueira? O que estiver cozinhando será perdido.",
-	"FOGATA_CASILLERO_CARBON": "Carvão",
+	"FOGATA_CASILLERO_COMBUSTIBLE": "Carvão",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
 	"FOGATA_CASILLERO_SALIDA": "Saída",
 	"FOGATA_SALIDA_OCUPADA": "Já há outra comida na fogueira. Retire-a primeiro.",

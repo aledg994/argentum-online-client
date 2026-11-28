@@ -795,7 +795,7 @@
 	"FOGATA_TODO_LISTO": "Tutto pronto, ritira il tuo cibo",
 	"FOGATA_SIN_COCCION": "Deposita un alimento crudo e premi Cucina",
 	"FOGATA_CONFIRMAR_APAGAR": "Spegnere il falò? Ciò che sta cuocendo andrà perso.",
-	"FOGATA_CASILLERO_CARBON": "Carbone",
+	"FOGATA_CASILLERO_COMBUSTIBLE": "Carbone",
 	"FOGATA_CASILLERO_INGREDIENTE": "Ingrediente",
 	"FOGATA_CASILLERO_SALIDA": "Uscita",
 	"FOGATA_SALIDA_OCUPADA": "C'è già un altro cibo sul falò. Ritiralo prima.",

@@ -236,7 +236,7 @@ Public Sub RefreshPanel()
         Else
             Call InvCampfireOutput.ClearSlot(1)
         End If
-        campfireCookText = ObjData(CookRawObj).name & " -> " & ObjData(CookCookedObj).name
+        campfireCookText = vbNullString
         If CookRetrieved + readyNow >= CookTotal Then
             campfireNextText = JsonLanguage.Item("FOGATA_TODO_LISTO")
         Else

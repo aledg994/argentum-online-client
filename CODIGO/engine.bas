@@ -2596,11 +2596,11 @@ Public Sub DrawInterfaceCampfire()
     Call frmCampfire.InvCampfireCoal.DrawInventory
     Call frmCampfire.InvCampfireIngredient.DrawInventory
     Call frmCampfire.InvCampfireOutput.DrawInventory
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_CARBON"), 85, 25, COLOR_WHITE)
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), 10, 111, COLOR_WHITE)
-    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), 146, 111, COLOR_WHITE)
-    Call Engine_Text_Render(frmCampfire.campfireCookText, CAMPFIRE_TEXT_X, CAMPFIRE_TEXT_COOK_Y, COLOR_WHITE)
-    Call Engine_Text_Render(frmCampfire.campfireNextText, CAMPFIRE_TEXT_NEXT_X, CAMPFIRE_TEXT_NEXT_Y, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_COMBUSTIBLE"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_COMBUSTIBLE"), CAMPFIRE_COAL_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_FUEL_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), CAMPFIRE_INGREDIENT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_SLOT_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), CAMPFIRE_OUTPUT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_SLOT_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(frmCampfire.campfireCookText, GetCampfireCenteredTextX(frmCampfire.campfireCookText, CAMPFIRE_COAL_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_TEXT_COOK_Y, COLOR_WHITE)
+    Call Engine_Text_Render(frmCampfire.campfireNextText, GetCampfireCenteredTextX(frmCampfire.campfireNextText, CAMPFIRE_OUTPUT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_TEXT_NEXT_Y, COLOR_WHITE)
     Call frmCampfire.InvCampfireUser.DrawDraggedItem
     Call frmCampfire.InvCampfireCoal.DrawDraggedItem
     Call frmCampfire.InvCampfireIngredient.DrawDraggedItem

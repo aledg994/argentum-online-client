@@ -28,10 +28,27 @@ Public Const CAMPFIRE_INGREDIENT_Y     As Integer = 125
 Public Const CAMPFIRE_OUTPUT_X         As Integer = 147
 Public Const CAMPFIRE_OUTPUT_Y         As Integer = 125
 
-Public Const CAMPFIRE_TEXT_X        As Long = 10
-Public Const CAMPFIRE_TEXT_COOK_Y   As Long = 180
-Public Const CAMPFIRE_TEXT_NEXT_Y   As Long = 160
-Public Const CAMPFIRE_TEXT_NEXT_X   As Long = 75
+Public Const CAMPFIRE_TEXT_MIN_X    As Integer = 10
+Public Const CAMPFIRE_TEXT_MAX_X    As Integer = 235
+Public Const CAMPFIRE_TEXT_COOK_Y   As Integer = 180
+Public Const CAMPFIRE_TEXT_NEXT_Y   As Integer = 160
 
 Public Const CAMPFIRE_SLOT_COUNT   As Integer = 1
 Public Const CAMPFIRE_SLOT_SPACING As Integer = 3
+
+Public Const CAMPFIRE_SLOT_LABEL_Y  As Integer = 111
+Public Const CAMPFIRE_FUEL_LABEL_Y  As Integer = 25
+
+Public Function GetCampfireCenteredTextX(ByVal panelText As String, ByVal CenterX As Integer) As Integer
+    On Error GoTo GetCampfireCenteredTextX_Err
+    Dim textwidth As Integer
+    Dim textX     As Integer
+    textwidth = Engine_Text_Width(panelText)
+    textX = CenterX - textwidth \ 2
+    If textX + textwidth > CAMPFIRE_TEXT_MAX_X Then textX = CAMPFIRE_TEXT_MAX_X - textwidth
+    If textX < CAMPFIRE_TEXT_MIN_X Then textX = CAMPFIRE_TEXT_MIN_X
+    GetCampfireCenteredTextX = textX
+    Exit Function
+GetCampfireCenteredTextX_Err:
+    Call RegistrarError(Err.Number, Err.Description, "modCampfirePanel.GetCampfireCenteredTextX", Erl)
+End Function
