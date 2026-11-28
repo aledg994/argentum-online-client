@@ -1620,7 +1620,7 @@ Sub Char_Render(ByVal charindex As Long, ByVal PixelOffsetX As Integer, ByVal Pi
                         MostrarNombre = True
                         Call RGBAList(NameColor, 210, 105, 30)
                         Call InitGrh(TempGrh, 839)
-                        If .UserMaxHp > 0 Then
+                        If .UserMaxHp > 0 And .EsMascota Then
                             Dim TempColor(3) As RGBA
                             Call RGBAList(TempColor, 255, 255, 255, 200)
                             Call Draw_Grh(TempGrh, PixelOffsetX + 1 + .Body.BodyOffset.x, PixelOffsetY + 10 + .Body.BodyOffset.y, 1, 0, TempColor, False, 0, 0, 0)
