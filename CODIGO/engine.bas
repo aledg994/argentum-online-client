@@ -2600,7 +2600,7 @@ Public Sub DrawInterfaceCampfire()
     Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), 10, 111, COLOR_WHITE)
     Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), 146, 111, COLOR_WHITE)
     Call Engine_Text_Render(frmCampfire.campfireCookText, CAMPFIRE_TEXT_X, CAMPFIRE_TEXT_COOK_Y, COLOR_WHITE)
-    Call Engine_Text_Render(frmCampfire.campfireNextText, CAMPFIRE_TEXT_X, CAMPFIRE_TEXT_NEXT_Y, COLOR_WHITE)
+    Call Engine_Text_Render(frmCampfire.campfireNextText, CAMPFIRE_TEXT_NEXT_X, CAMPFIRE_TEXT_NEXT_Y, COLOR_WHITE)
     Call frmCampfire.InvCampfireUser.DrawDraggedItem
     Call frmCampfire.InvCampfireCoal.DrawDraggedItem
     Call frmCampfire.InvCampfireIngredient.DrawDraggedItem

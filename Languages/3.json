@@ -792,7 +792,6 @@
   "MENSAJE_AUTOCOMBATE_ACTIVO": "[AUTOCOMBATE ATIVO]",
 	"FOGATA_DURA": "A fogueira dura",
 	"FOGATA_MINUTOS": "min a mais",
-	"FOGATA_PROXIMO_LISTO": "Próximo pronto em",
 	"FOGATA_TODO_LISTO": "Tudo pronto, retire sua comida",
 	"FOGATA_SIN_COCCION": "Coloque um alimento cru e aperte Cozinhar",
 	"FOGATA_CONFIRMAR_APAGAR": "Apagar a fogueira? O que estiver cozinhando será perdido.",

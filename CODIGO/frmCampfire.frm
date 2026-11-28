@@ -241,7 +241,7 @@ Public Sub RefreshPanel()
             campfireNextText = JsonLanguage.Item("FOGATA_TODO_LISTO")
         Else
             secondsToNext = GetLocalSecondsToNext(ElapsedSeconds)
-            campfireNextText = JsonLanguage.Item("FOGATA_PROXIMO_LISTO") & " " & (secondsToNext \ SECONDS_PER_MINUTE) & ":" & format$(secondsToNext Mod SECONDS_PER_MINUTE, "00") & _
+            campfireNextText = (secondsToNext \ SECONDS_PER_MINUTE) & ":" & format$(secondsToNext Mod SECONDS_PER_MINUTE, "00") & _
                     " (" & readyNow & "/" & (CookTotal - CookRetrieved) & ")"
             If m_IngredientAmount > 0 Then campfireNextText = campfireNextText & " ï¿½ " & m_IngredientAmount & " " & JsonLanguage.Item("FOGATA_POR_COCINAR")
         End If

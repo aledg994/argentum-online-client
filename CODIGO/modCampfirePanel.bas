@@ -30,7 +30,8 @@ Public Const CAMPFIRE_OUTPUT_Y         As Integer = 125
 
 Public Const CAMPFIRE_TEXT_X        As Long = 10
 Public Const CAMPFIRE_TEXT_COOK_Y   As Long = 180
-Public Const CAMPFIRE_TEXT_NEXT_Y   As Long = 195
+Public Const CAMPFIRE_TEXT_NEXT_Y   As Long = 160
+Public Const CAMPFIRE_TEXT_NEXT_X   As Long = 75
 
 Public Const CAMPFIRE_SLOT_COUNT   As Integer = 1
 Public Const CAMPFIRE_SLOT_SPACING As Integer = 3
