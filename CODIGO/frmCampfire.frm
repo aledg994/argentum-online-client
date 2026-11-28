@@ -19,12 +19,6 @@ Begin VB.Form frmCampfire
       Left            =   480
       Top             =   0
    End
-   Begin VB.Timer tmrNumber 
-      Enabled         =   0   'False
-      Interval        =   30
-      Left            =   0
-      Top             =   0
-   End
    Begin VB.TextBox cantidad 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -49,7 +43,6 @@ Begin VB.Form frmCampfire
    End
    Begin VB.PictureBox interface 
       Appearance      =   0  'Flat
-      AutoRedraw      =   -1  'True
       BackColor       =   &H00000000&
       BorderStyle     =   0  'None
       CausesValidation=   0   'False
@@ -99,42 +92,6 @@ Begin VB.Form frmCampfire
       Top             =   6510
       Width           =   315
    End
-   Begin VB.Label lblProximo 
-      BackStyle       =   0  'Transparent
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00C0C0C0&
-      Height          =   255
-      Left            =   630
-      TabIndex        =   2
-      Top             =   5700
-      Width           =   1.03275e5
-   End
-   Begin VB.Label lblCoccion 
-      BackStyle       =   0  'Transparent
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   255
-      Left            =   630
-      TabIndex        =   3
-      Top             =   5400
-      Width           =   1.03275e5
-   End
    Begin VB.Label lblFogataTiempo 
       BackStyle       =   0  'Transparent
       BeginProperty Font 
@@ -149,7 +106,7 @@ Begin VB.Form frmCampfire
       ForeColor       =   &H0080C0FF&
       Height          =   255
       Left            =   2850
-      TabIndex        =   4
+      TabIndex        =   2
       Top             =   5745
       Width           =   1.03995e5
    End
@@ -206,7 +163,7 @@ Private Const DRAG_SOURCE_NONE       As Integer = 0
 Private Const DRAG_SOURCE_USER       As Integer = 1
 Private Const DRAG_SOURCE_INGREDIENT As Integer = 2
 Private Const DRAG_SOURCE_OUTPUT     As Integer = 3
-Private m_QuantityStep     As Integer
+
 Private m_OpenMap          As Integer
 
 Private cBotonMas              As clsGraphicalButton
@@ -221,6 +178,10 @@ Private Const BTN_COOK_OFF     As String = "boton-cocinar-off.bmp"
 Private Const BTN_OFF_DEFAULT  As String = "boton-apagar-default.bmp"
 Private Const BTN_OFF_OVER     As String = "boton-apagar-over.bmp"
 Private Const BTN_OFF_OFF      As String = "boton-apagar-off.bmp"
+
+Public campfireCookText    As String
+Public campfireNextText    As String
+Public campfireNeedsRedraw As Boolean
 
 Public Sub ShowCampfireState()
     On Error GoTo ShowCampfireState_Err
@@ -275,21 +236,22 @@ Public Sub RefreshPanel()
         Else
             Call InvCampfireOutput.ClearSlot(1)
         End If
-        lblCoccion.Caption = ObjData(CookRawObj).name & " -> " & ObjData(CookCookedObj).name
+        campfireCookText = ObjData(CookRawObj).name & " -> " & ObjData(CookCookedObj).name
         If CookRetrieved + readyNow >= CookTotal Then
-            lblProximo.Caption = JsonLanguage.Item("FOGATA_TODO_LISTO")
+            campfireNextText = JsonLanguage.Item("FOGATA_TODO_LISTO")
         Else
             secondsToNext = GetLocalSecondsToNext(ElapsedSeconds)
-            lblProximo.Caption = JsonLanguage.Item("FOGATA_PROXIMO_LISTO") & " " & (secondsToNext \ SECONDS_PER_MINUTE) & ":" & format$(secondsToNext Mod SECONDS_PER_MINUTE, "00") & _
+            campfireNextText = JsonLanguage.Item("FOGATA_PROXIMO_LISTO") & " " & (secondsToNext \ SECONDS_PER_MINUTE) & ":" & format$(secondsToNext Mod SECONDS_PER_MINUTE, "00") & _
                     " (" & readyNow & "/" & (CookTotal - CookRetrieved) & ")"
-            If m_IngredientAmount > 0 Then lblProximo.Caption = lblProximo.Caption & " · " & m_IngredientAmount & " " & JsonLanguage.Item("FOGATA_POR_COCINAR")
+            If m_IngredientAmount > 0 Then campfireNextText = campfireNextText & " ï¿½ " & m_IngredientAmount & " " & JsonLanguage.Item("FOGATA_POR_COCINAR")
         End If
     Else
         Call InvCampfireOutput.ClearSlot(1)
         Call RefreshDepositedIngredient
-        lblCoccion.Caption = JsonLanguage.Item("FOGATA_SIN_COCCION")
-        lblProximo.Caption = vbNullString
+        campfireCookText = JsonLanguage.Item("FOGATA_SIN_COCCION")
+        campfireNextText = vbNullString
     End If
+    campfireNeedsRedraw = True
     Exit Sub
 RefreshPanel_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.RefreshPanel", Erl)
@@ -480,34 +442,46 @@ Salir_Click_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Salir_Click", Erl)
 End Sub
 
-Private Sub cmdMas_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
-    m_QuantityStep = 1
-    tmrNumber.enabled = True
+Private Sub cmdMas_Click()
+    On Error GoTo cmdMas_Click_Err
+    Call ApplyQuantityStep(1)
+    Exit Sub
+cmdMas_Click_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.cmdMas_Click", Erl)
 End Sub
 
-Private Sub cmdMas_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
-    tmrNumber.enabled = False
+Private Sub cmdMenos_Click()
+    On Error GoTo cmdMenos_Click_Err
+    Call ApplyQuantityStep(-1)
+    Exit Sub
+cmdMenos_Click_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.cmdMenos_Click", Erl)
 End Sub
 
-Private Sub cmdMenos_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
-    m_QuantityStep = -1
-    tmrNumber.enabled = True
-End Sub
-
-Private Sub cmdMenos_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
-    tmrNumber.enabled = False
-End Sub
-
-Private Sub tmrNumber_Timer()
-    On Error GoTo tmrNumber_Timer_Err
+Private Sub ApplyQuantityStep(ByVal quantityStep As Long)
+    On Error GoTo ApplyQuantityStep_Err
     Dim newQuantity As Long
-    newQuantity = val(cantidad.Text) + m_QuantityStep
+    newQuantity = val(cantidad.Text) + quantityStep
     If newQuantity < MIN_QUANTITY Then newQuantity = MIN_QUANTITY
     If newQuantity > MAX_QUANTITY Then newQuantity = MAX_QUANTITY
     cantidad.Text = format$(newQuantity)
     Exit Sub
-tmrNumber_Timer_Err:
-    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.tmrNumber_Timer", Erl)
+ApplyQuantityStep_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.ApplyQuantityStep", Erl)
+End Sub
+
+Private Sub cantidad_Change()
+    On Error GoTo cantidad_Change_Err
+    If val(cantidad.Text) > MAX_QUANTITY Then
+        cantidad.Text = format$(MAX_QUANTITY)
+        cantidad.SelStart = Len(cantidad.Text)
+    ElseIf val(cantidad.Text) < MIN_QUANTITY Then
+        cantidad.Text = format$(MIN_QUANTITY)
+        cantidad.SelStart = Len(cantidad.Text)
+    End If
+    Exit Sub
+cantidad_Change_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.cantidad_Change", Erl)
 End Sub
 
 Private Sub cantidad_KeyPress(KeyAscii As Integer)
@@ -543,6 +517,14 @@ Private Sub Form_Load()
     Exit Sub
 Form_Load_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Form_Load", Erl)
+End Sub
+
+Private Sub Form_Activate()
+    On Error GoTo Form_Activate_Err
+    campfireNeedsRedraw = True
+    Exit Sub
+Form_Activate_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.Form_Activate", Erl)
 End Sub
 
 Private Sub LoadButtons()
@@ -583,7 +565,6 @@ End Sub
 Private Sub Form_Unload(Cancel As Integer)
     On Error GoTo Form_Unload_Err
     tmrCampfire.enabled = False
-    tmrNumber.enabled = False
     m_IngredientSlot = 0
     m_IngredientAmount = 0
     m_IngredientObj = 0
@@ -690,3 +671,10 @@ interface_MouseUp_Err:
     Call RegistrarError(Err.Number, Err.Description, "frmCampfire.interface_MouseUp", Erl)
 End Sub
 
+Private Sub interface_Paint()
+    On Error GoTo interface_Paint_Err
+    campfireNeedsRedraw = True
+    Exit Sub
+interface_Paint_Err:
+    Call RegistrarError(Err.Number, Err.Description, "frmCampfire.interface_Paint", Erl)
+End Sub
