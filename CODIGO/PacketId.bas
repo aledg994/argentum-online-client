@@ -213,6 +213,8 @@ Public Enum ServerPacketID
     eHooTargetedSpellCastResult
     eHooHouseDoorActionResult
     eAutoCombatState
+    eCampfireState
+    eCampfireExtinguished
     eMaxPacket
     [PacketCount]
 End Enum
@@ -539,6 +541,11 @@ Public Enum ClientPacketID
     eHooTargetedSpellCast
     eHooHouseDoorAction
     eToggleAutoCombat
+    eCampfireCook
+    eCampfireRetrieve
+    eCampfireAddCoal
+    eCampfireExtinguish
+    eCampfireCancelCook
     eMaxPacket
     [PacketCount]
 End Enum

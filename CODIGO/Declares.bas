@@ -849,6 +849,7 @@ Public Enum eObjType
     otElementalRune = 55
     otFactionForgiveness = 56
     otCollectibleCard = 57
+    otRawFood = 58
     otCualquiera = 1000
 End Enum
 

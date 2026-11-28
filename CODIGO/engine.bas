@@ -2080,6 +2080,8 @@ Public Sub start()
                         DrawInterfaceBovedaCuenta
                     ElseIf frmCrafteo.visible Then
                         DrawInterfaceCrafting
+                    ElseIf frmCampfire.visible Then
+                        Call DrawInterfaceCampfire
                     End If
                     If FrmKeyInv.visible Then
                         DrawInterfaceKeys
@@ -2575,6 +2577,39 @@ Public Sub DrawInterfaceCrafting()
 DrawInterfaceBoveda_Err:
     Call RegistrarError(Err.Number, Err.Description, "engine.DrawInterfaceCrafting", Erl)
     Resume Next
+End Sub
+
+Public Sub DrawInterfaceCampfire()
+    On Error GoTo DrawInterfaceCampfire_Err
+    If Not frmCampfire.InvCampfireUser.NeedsRedraw And Not frmCampfire.InvCampfireCoal.NeedsRedraw And Not frmCampfire.InvCampfireIngredient.NeedsRedraw _
+            And Not frmCampfire.InvCampfireOutput.NeedsRedraw And Not frmCampfire.campfireNeedsRedraw Then Exit Sub
+    frmCampfire.campfireNeedsRedraw = False
+    Dim InvRect As RECT
+    InvRect.Left = 0
+    InvRect.Top = 0
+    InvRect.Right = frmCampfire.interface.ScaleWidth
+    InvRect.Bottom = frmCampfire.interface.ScaleHeight
+    RenderCullingRect = InvRect
+    Call Engine_BeginScene
+    Call Draw_GrhIndex(100840, 0, 0)
+    Call frmCampfire.InvCampfireUser.DrawInventory
+    Call frmCampfire.InvCampfireCoal.DrawInventory
+    Call frmCampfire.InvCampfireIngredient.DrawInventory
+    Call frmCampfire.InvCampfireOutput.DrawInventory
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_COMBUSTIBLE"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_COMBUSTIBLE"), CAMPFIRE_COAL_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_FUEL_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_INGREDIENTE"), CAMPFIRE_INGREDIENT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_SLOT_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), GetCampfireCenteredTextX(JsonLanguage.Item("FOGATA_CASILLERO_SALIDA"), CAMPFIRE_OUTPUT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_SLOT_LABEL_Y, COLOR_WHITE)
+    Call Engine_Text_Render(frmCampfire.campfireCookText, GetCampfireCenteredTextX(frmCampfire.campfireCookText, CAMPFIRE_COAL_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_TEXT_COOK_Y, COLOR_WHITE)
+    Call Engine_Text_Render(frmCampfire.campfireNextText, GetCampfireCenteredTextX(frmCampfire.campfireNextText, CAMPFIRE_OUTPUT_X + CAMPFIRE_SLOT_SIZE \ 2), CAMPFIRE_TEXT_NEXT_Y, COLOR_WHITE)
+    Call frmCampfire.InvCampfireUser.DrawDraggedItem
+    Call frmCampfire.InvCampfireCoal.DrawDraggedItem
+    Call frmCampfire.InvCampfireIngredient.DrawDraggedItem
+    Call frmCampfire.InvCampfireOutput.DrawDraggedItem
+    Call Engine_EndScene(InvRect, frmCampfire.interface.hWnd)
+    RenderCullingRect = GameplayDrawAreaRect
+    Exit Sub
+DrawInterfaceCampfire_Err:
+    Call RegistrarError(Err.Number, Err.Description, "engine.DrawInterfaceCampfire", Erl)
 End Sub
 
 Public Sub Grh_Render_Advance(ByRef Grh As Grh, _
@@ -3259,6 +3294,15 @@ Public Sub InitializeInventory()
     Call frmCrafteo.InvCraftUser.Initialize(frmCrafteo.PicInven, MAX_INVENTORY_SLOTS, 210, , 250, 0, 3, 3, True)
     Call frmCrafteo.InvCraftItems.Initialize(frmCrafteo.PicInven, MAX_SLOTS_CRAFTEO, 175, , 25, 180, 3, 3, True)
     Call frmCrafteo.InvCraftCatalyst.Initialize(frmCrafteo.PicInven, 1, 35, 35, 100, 90, 3, 3, True)
+
+    Set frmCampfire.InvCampfireUser = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireCoal = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireIngredient = New clsGrapchicalInventory
+    Set frmCampfire.InvCampfireOutput = New clsGrapchicalInventory
+    Call frmCampfire.InvCampfireUser.Initialize(frmCampfire.interface, MAX_INVENTORY_SLOTS, CAMPFIRE_USER_INV_WIDTH, 0, CAMPFIRE_USER_INV_X, 0, CAMPFIRE_SLOT_SPACING, CAMPFIRE_SLOT_SPACING, True)
+    Call frmCampfire.InvCampfireCoal.Initialize(frmCampfire.interface, CAMPFIRE_SLOT_COUNT, CAMPFIRE_SLOT_SIZE, CAMPFIRE_SLOT_SIZE, CAMPFIRE_COAL_X, CAMPFIRE_COAL_Y, CAMPFIRE_SLOT_SPACING, CAMPFIRE_SLOT_SPACING, True)
+    Call frmCampfire.InvCampfireIngredient.Initialize(frmCampfire.interface, CAMPFIRE_SLOT_COUNT, CAMPFIRE_SLOT_SIZE, CAMPFIRE_SLOT_SIZE, CAMPFIRE_INGREDIENT_X, CAMPFIRE_INGREDIENT_Y, CAMPFIRE_SLOT_SPACING, CAMPFIRE_SLOT_SPACING, True)
+    Call frmCampfire.InvCampfireOutput.Initialize(frmCampfire.interface, CAMPFIRE_SLOT_COUNT, CAMPFIRE_SLOT_SIZE, CAMPFIRE_SLOT_SIZE, CAMPFIRE_OUTPUT_X, CAMPFIRE_OUTPUT_Y, CAMPFIRE_SLOT_SPACING, CAMPFIRE_SLOT_SPACING, True)
 
     Call frmSkins.InvSkins.Initialize(frmSkins.interface, MAX_SKINSINVENTORY_SLOTS, 210, 0, 0, 0, 3, 3, False, , True)
 

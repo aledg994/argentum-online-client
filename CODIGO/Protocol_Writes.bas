@@ -1113,6 +1113,61 @@ WriteCraftCarpenter_Err:
     '</EhFooter>
 End Sub
 
+Public Sub WriteCampfireCook(ByVal inventorySlot As Byte, ByVal cookAmount As Integer)
+    On Error GoTo WriteCampfireCook_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireCook)
+    Call Writer.WriteInt8(inventorySlot)
+    Call Writer.WriteInt16(cookAmount)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireCook_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireCook", Erl)
+End Sub
+
+Public Sub WriteCampfireRetrieve()
+    On Error GoTo WriteCampfireRetrieve_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireRetrieve)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireRetrieve_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireRetrieve", Erl)
+End Sub
+
+Public Sub WriteCampfireAddCoal(ByVal inventorySlot As Byte, ByVal coalAmount As Integer)
+    On Error GoTo WriteCampfireAddCoal_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireAddCoal)
+    Call Writer.WriteInt8(inventorySlot)
+    Call Writer.WriteInt16(coalAmount)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireAddCoal_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireAddCoal", Erl)
+End Sub
+
+Public Sub WriteCampfireExtinguish()
+    On Error GoTo WriteCampfireExtinguish_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireExtinguish)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireExtinguish_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireExtinguish", Erl)
+End Sub
+
+Public Sub WriteCampfireCancelCook(ByVal cancelAmount As Integer)
+    On Error GoTo WriteCampfireCancelCook_Err
+    Call Writer.WriteInt16(ClientPacketID.eCampfireCancelCook)
+    Call Writer.WriteInt16(cancelAmount)
+    Call modNetwork.send(Writer)
+    Exit Sub
+WriteCampfireCancelCook_Err:
+    Call Writer.Clear
+    Call RegistrarError(Err.Number, Err.Description, "Protocol_Writes.WriteCampfireCancelCook", Erl)
+End Sub
+
 Public Sub WriteCraftAlquimista(ByVal Item As Integer)
     '<EhHeader>
     On Error GoTo WriteCraftAlquimista_Err
